@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "918972972138",
+    "project_id": "amorra-bd69f",
+    "storage_bucket": "amorra-bd69f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918972972138:android:5ea27eb88e27c05e325e13",
+        "android_client_info": {
+          "package_name": "com.example.amorra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_F7mkrFBglandbPoCWTbxbiDZ3Tsob34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918972972138:android:a25e6906c55be93a325e13",
+        "android_client_info": {
+          "package_name": "com.mycompany.amorra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_F7mkrFBglandbPoCWTbxbiDZ3Tsob34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
