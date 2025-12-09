@@ -50,56 +50,69 @@ class ProfileScreen extends GetView<ProfileController> {
           );
         }
 
-        return SingleChildScrollView(
-          padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppScreenHeader(title: AppTexts.profileTitle),
-              AppSpacing.vertical(context, 0.03),
+        return Column(
+          children: [
+            // Fixed Header
+            Padding(
+              padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(bottom: 0),
+              child: const AppScreenHeader(title: AppTexts.profileTitle),
+            ),
 
-              // Profile Header Card with Gradient
-              Obx(() => ProfileHeaderCard(
-                    userName: controller.userName,
-                    isEditingName: controller.isEditingName.value,
-                    nameController: controller.nameController,
-                    onEditTap: controller.startEditingName,
-                    onSave: controller.saveName,
-                    onCancel: controller.cancelEditingName,
-                  )),
-              AppSpacing.vertical(context, 0.02),
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(top: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppSpacing.vertical(context, 0.01),
 
-              // User Information Card
-              ProfileUserInfoCard(
-                ageDisplayText: controller.ageDisplayText,
-                email: controller.userEmail,
+                    // Profile Header Card with Gradient
+                    Obx(() => ProfileHeaderCard(
+                          userName: controller.userName,
+                          userAge: controller.userAge,
+                          isEditingName: controller.isEditingName.value,
+                          nameController: controller.nameController,
+                          onEditTap: controller.startEditingName,
+                          onSave: controller.saveName,
+                          onCancel: controller.cancelEditingName,
+                        )),
+                    AppSpacing.vertical(context, 0.02),
+
+                    // User Information Card
+                    ProfileUserInfoCard(
+                      ageDisplayText: controller.ageDisplayText,
+                      email: controller.userEmail,
+                    ),
+                    AppSpacing.vertical(context, 0.02),
+
+                    // Subscription Card
+                    Obx(() => ProfileSubscriptionCard(
+                          isSubscribed: controller.isSubscribed,
+                          remainingMessages: controller.remainingFreeMessages,
+                          usedMessages: controller.usedMessages,
+                          dailyLimit: controller.dailyLimit,
+                          nextBillingDate: controller.nextBillingDate,
+                          onUpgradeTap: controller.navigateToSubscription,
+                          onManageTap: controller.navigateToSubscription,
+                        )),
+                    AppSpacing.vertical(context, 0.02),
+
+                    // Safety Section
+                    const ProfileSafetySection(),
+                    AppSpacing.vertical(context, 0.02),
+
+                    // Action Buttons
+                    Obx(() => ProfileActionButtons(
+                          onLogout: controller.logout,
+                          onDeleteAccount: controller.deleteAccount,
+                          isLoading: controller.isLoading.value,
+                        )),
+                  ],
+                ),
               ),
-              AppSpacing.vertical(context, 0.02),
-
-              // Subscription Card
-              Obx(() => ProfileSubscriptionCard(
-                    isSubscribed: controller.isSubscribed,
-                    remainingMessages: controller.remainingFreeMessages,
-                    usedMessages: controller.usedMessages,
-                    dailyLimit: controller.dailyLimit,
-                    nextBillingDate: controller.nextBillingDate,
-                    onUpgradeTap: controller.navigateToSubscription,
-                    onManageTap: controller.navigateToSubscription,
-                  )),
-              AppSpacing.vertical(context, 0.02),
-
-              // Safety Section
-              const ProfileSafetySection(),
-              AppSpacing.vertical(context, 0.02),
-
-              // Action Buttons
-              Obx(() => ProfileActionButtons(
-                    onLogout: controller.logout,
-                    onDeleteAccount: controller.deleteAccount,
-                    isLoading: controller.isLoading.value,
-                  )),
-            ],
-          ),
+            ),
+          ],
         );
       }),
     );

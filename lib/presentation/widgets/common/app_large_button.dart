@@ -47,7 +47,7 @@ class AppLargeButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: AppResponsive.screenHeight(context) * 0.06,
+      height: AppResponsive.screenHeight(context) * 0.05,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

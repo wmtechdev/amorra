@@ -10,6 +10,7 @@ import 'package:amorra/core/utils/app_texts/app_texts.dart';
 import 'package:amorra/presentation/controllers/base_controller.dart';
 import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
+import 'package:amorra/presentation/controllers/main/main_navigation_controller.dart';
 import 'package:amorra/presentation//widgets/common/app_alert_dialog.dart';
 import 'package:amorra/presentation//widgets/common/app_password_dialog.dart';
 
@@ -310,7 +311,17 @@ class ProfileController extends BaseController {
 
   /// Navigate to subscription screen
   void navigateToSubscription() {
-    // TODO: Implement navigation to subscription screen
+    try {
+      // Get MainNavigationController and change to subscription tab (index 2)
+      final mainNavController = Get.find<MainNavigationController>();
+      mainNavController.changeTab(2); // Subscription tab index
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error navigating to subscription: $e');
+      }
+      // Fallback: try to navigate using route
+      Get.toNamed(AppRoutes.subscription);
+    }
   }
 }
 

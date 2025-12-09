@@ -4,6 +4,8 @@ import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/presentation/widgets/common/ai_avatar.dart';
+import 'package:amorra/presentation/widgets/common/user_avatar.dart';
 import 'chat_timestamp_widget.dart';
 
 /// Chat Message Bubble Widget
@@ -13,6 +15,7 @@ class ChatMessageBubble extends StatelessWidget {
   final String type; // 'user' or 'ai'
   final DateTime timestamp;
   final bool showTimestamp;
+  final int? userAge; // For user avatar
 
   const ChatMessageBubble({
     super.key,
@@ -20,61 +23,95 @@ class ChatMessageBubble extends StatelessWidget {
     required this.type,
     required this.timestamp,
     this.showTimestamp = true,
+    this.userAge,
   });
 
   bool get isUser => type == AppConstants.messageTypeUser;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment:
-          isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+    final avatarSize = AppResponsive.iconSize(context, factor: 1.5);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: isUser
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
-        Container(
-          constraints: BoxConstraints(
-            maxWidth: AppResponsive.screenWidth(context) * 0.75,
+        // Avatar (only for AI, on the left)
+        if (!isUser) ...[
+          AIAvatar(
+            size: avatarSize,
+            iconSize: AppResponsive.iconSize(context, factor: 0.6),
           ),
-          padding: AppSpacing.symmetric(context, h: 0.03, v: 0.02),
-          decoration: BoxDecoration(
-            color: isUser ? AppColors.primary : AppColors.secondary,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(
-                AppResponsive.radius(context, factor: 2),
+          AppSpacing.horizontal(context, 0.015),
+        ],
+
+        // Message bubble
+        Flexible(
+          child: Column(
+            crossAxisAlignment: isUser
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            children: [
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: AppResponsive.screenWidth(context) * 0.7,
+                ),
+                padding: AppSpacing.symmetric(context, h: 0.02, v: 0.01),
+                decoration: BoxDecoration(
+                  color: isUser ? AppColors.primary : AppColors.secondary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(
+                      AppResponsive.radius(context, factor: 2),
+                    ),
+                    topRight: Radius.circular(
+                      AppResponsive.radius(context, factor: 2),
+                    ),
+                    bottomLeft: Radius.circular(
+                      isUser
+                          ? AppResponsive.radius(context, factor: 2)
+                          : AppResponsive.radius(context, factor: 0.5),
+                    ),
+                    bottomRight: Radius.circular(
+                      isUser
+                          ? AppResponsive.radius(context, factor: 0.5)
+                          : AppResponsive.radius(context, factor: 2),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  message,
+                  style: AppTextStyles.bodyText(context).copyWith(
+                    color: AppColors.white,
+                    fontSize: AppResponsive.scaleSize(context, 14),
+                    height: 1.3
+                  ),
+                ),
               ),
-              topRight: Radius.circular(
-                AppResponsive.radius(context, factor: 2),
-              ),
-              bottomLeft: Radius.circular(
-                isUser
-                    ? AppResponsive.radius(context, factor: 2)
-                    : AppResponsive.radius(context, factor: 0.5),
-              ),
-              bottomRight: Radius.circular(
-                isUser
-                    ? AppResponsive.radius(context, factor: 0.5)
-                    : AppResponsive.radius(context, factor: 2),
-              ),
-            ),
-          ),
-          child: Text(
-            message,
-            style: AppTextStyles.bodyText(context).copyWith(
-              color: AppColors.white,
-              fontSize: AppResponsive.scaleSize(context, 15),
-            ),
+              if (showTimestamp)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: AppResponsive.screenHeight(context) * 0.005,
+                    left: isUser
+                        ? 0
+                        : AppResponsive.screenWidth(context) * 0.01,
+                    right: isUser
+                        ? AppResponsive.screenWidth(context) * 0.01
+                        : 0,
+                  ),
+                  child: ChatTimestampWidget(timestamp: timestamp),
+                ),
+            ],
           ),
         ),
-        if (showTimestamp)
-          Padding(
-            padding: EdgeInsets.only(
-              top: AppResponsive.screenHeight(context) * 0.005,
-              left: isUser ? 0 : AppResponsive.screenWidth(context) * 0.02,
-              right: isUser ? AppResponsive.screenWidth(context) * 0.02 : 0,
-            ),
-            child: ChatTimestampWidget(timestamp: timestamp),
-          ),
+
+        // Avatar (only for user, on the right)
+        if (isUser) ...[
+          AppSpacing.horizontal(context, 0.015),
+          UserAvatar(age: userAge, size: avatarSize),
+        ],
       ],
     );
   }
 }
-

@@ -28,6 +28,9 @@ class ChatController extends BaseController {
   // User ID (should come from auth)
   String? get userId => Get.find<AuthController>().currentUser.value?.id;
 
+  // User Age (should come from auth)
+  int? get userAge => Get.find<AuthController>().currentUser.value?.age;
+
   @override
   void onInit() {
     super.onInit();
@@ -36,7 +39,7 @@ class ChatController extends BaseController {
       listenToMessages();
       checkDailyLimit();
     }
-    
+
     // Listen to input changes
     inputController.addListener(() {
       // Update canSendMessage based on input and limit

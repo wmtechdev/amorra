@@ -1,3 +1,4 @@
+import 'package:amorra/core/utils/app_gradient/app_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
 import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
@@ -8,71 +9,79 @@ import 'package:iconsax/iconsax.dart';
 
 /// Chat Input Field Widget
 /// Text field with send button for chat messages
-class ChatInputField extends StatelessWidget {
+class ChatInputField extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback? onSend;
-  final bool isEnabled;
+  final bool isLimitReached;
   final String? hintText;
 
   const ChatInputField({
     super.key,
     required this.controller,
     this.onSend,
-    this.isEnabled = true,
+    this.isLimitReached = false,
     this.hintText,
   });
 
   @override
+  State<ChatInputField> createState() => _ChatInputFieldState();
+}
+
+class _ChatInputFieldState extends State<ChatInputField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final hasText = controller.text.trim().isNotEmpty;
+    final hasText = widget.controller.text.trim().isNotEmpty;
+    final canSend = hasText && !widget.isLimitReached && widget.onSend != null;
 
     return Container(
-      padding: AppSpacing.symmetric(context, h: 0.02, v: 0.015),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(
-          top: BorderSide(
-            color: AppColors.lightGrey,
-            width: 1,
-          ),
-        ),
-      ),
+      padding: AppSpacing.symmetric(context, h: 0.02, v: 0.005),
       child: SafeArea(
         top: false,
         child: Row(
           children: [
             // Text Field
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.lightGrey.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(
-                    AppResponsive.radius(context, factor: 3),
+              child: TextField(
+                controller: widget.controller,
+                maxLines: null,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) {
+                  if (canSend) {
+                    widget.onSend!();
+                  }
+                },
+                style: AppTextStyles.bodyText(
+                  context,
+                ).copyWith(color: AppColors.black),
+                decoration: InputDecoration(
+                  hintText: widget.hintText ?? AppTexts.chatInputHint,
+                  hintStyle: AppTextStyles.hintText(
+                    context,
+                  ).copyWith(color: AppColors.grey),
+                  contentPadding: AppSpacing.symmetric(
+                    context,
+                    h: 0.03,
+                    v: 0.02,
                   ),
-                ),
-                child: TextField(
-                  controller: controller,
-                  enabled: isEnabled,
-                  maxLines: null,
-                  textInputAction: TextInputAction.send,
-                  onSubmitted: (_) {
-                    if (hasText && onSend != null) {
-                      onSend!();
-                    }
-                  },
-                  style: AppTextStyles.bodyText(context).copyWith(
-                    color: AppColors.black,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: hintText ?? AppTexts.chatInputHint,
-                    hintStyle: AppTextStyles.hintText(context).copyWith(
-                      color: AppColors.grey,
-                    ),
-                    contentPadding: AppSpacing.symmetric(context, h: 0.03, v: 0.02),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
               ),
             ),
@@ -80,16 +89,16 @@ class ChatInputField extends StatelessWidget {
 
             // Send Button
             GestureDetector(
-              onTap: hasText && isEnabled ? onSend : null,
+              onTap: canSend ? widget.onSend : null,
               child: Container(
                 width: AppResponsive.iconSize(context, factor: 1.5),
                 height: AppResponsive.iconSize(context, factor: 1.5),
-                decoration: BoxDecoration(
-                  color: hasText && isEnabled
-                      ? AppColors.primary
-                      : AppColors.grey.withValues(alpha: 0.3),
-                  shape: BoxShape.circle,
-                ),
+                decoration: canSend
+                    ? BoxDecoration(shape: BoxShape.circle).withAppGradient()
+                    : BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.grey,
+                      ),
                 child: Icon(
                   Iconsax.send_1,
                   color: AppColors.white,
@@ -103,4 +112,3 @@ class ChatInputField extends StatelessWidget {
     );
   }
 }
-

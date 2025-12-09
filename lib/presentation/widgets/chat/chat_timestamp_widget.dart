@@ -24,7 +24,7 @@ class ChatTimestampWidget extends StatelessWidget {
       _formattedTime,
       style: AppTextStyles.hintText(context).copyWith(
         color: AppColors.grey,
-        fontSize: AppResponsive.scaleSize(context, 11),
+        fontSize: AppResponsive.scaleSize(context, 12),
       ),
     );
   }

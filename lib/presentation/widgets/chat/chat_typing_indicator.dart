@@ -41,29 +41,23 @@ class _ChatTypingIndicatorState extends State<ChatTypingIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppResponsive.screenWidth(context) * 0.03,
-        vertical: AppResponsive.screenHeight(context) * 0.015,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(3, (index) {
-          return Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: AppResponsive.screenWidth(context) * 0.01,
-            ),
-            width: AppResponsive.scaleSize(context, 8),
-            height: AppResponsive.scaleSize(context, 8),
-            decoration: BoxDecoration(
-              color: _dotIndex == index
-                  ? AppColors.success
-                  : AppColors.success.withValues(alpha: 0.3),
-              shape: BoxShape.circle,
-            ),
-          );
-        }),
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (index) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: AppResponsive.screenWidth(context) * 0.01,
+          ),
+          width: AppResponsive.scaleSize(context, 8),
+          height: AppResponsive.scaleSize(context, 8),
+          decoration: BoxDecoration(
+            color: _dotIndex == index
+                ? AppColors.white
+                : AppColors.white.withValues(alpha: 0.5),
+            shape: BoxShape.circle,
+          ),
+        );
+      }),
     );
   }
 }

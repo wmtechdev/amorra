@@ -39,7 +39,7 @@ class ProfileNameEditField extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
             decoration: InputDecoration(
-              contentPadding: AppSpacing.symmetric(context, h: 0.03, v: 0.02),
+              contentPadding: AppSpacing.symmetric(context, h: 0.04, v: 0.01),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   AppResponsive.radius(context, factor: 1.5),

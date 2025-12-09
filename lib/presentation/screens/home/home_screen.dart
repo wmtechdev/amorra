@@ -23,41 +23,53 @@ class HomeScreen extends GetView<HomeController> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return SingleChildScrollView(
-          padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppScreenHeader(),
-              AppSpacing.vertical(context, 0.01),
+        return Column(
+          children: [
+            // Fixed Header
+            Padding(
+              padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(bottom: 0),
+              child: const AppScreenHeader(),
+            ),
 
-              // TopSection
-              HomeTopSection(
-                userName: controller.userName.value,
-                greeting: controller.greeting.value,
-                introText: AppTexts.homeIntroText,
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(top: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppSpacing.vertical(context, 0.01),
+
+                    // TopSection
+                    HomeTopSection(
+                      userName: controller.userName.value,
+                      greeting: controller.greeting.value,
+                      introText: AppTexts.homeIntroText,
+                    ),
+
+                    AppSpacing.vertical(context, 0.02),
+
+                    // ChatCtaCard
+                    HomeChatCtaCard(
+                      hasActiveChat: controller.hasActiveChat.value,
+                      lastMessageSnippet: controller.lastMessage.value?.message,
+                      lastMessageTime: controller.lastMessage.value?.timestamp,
+                      onTap: () => controller.navigateToChat(),
+                    ),
+
+                    AppSpacing.vertical(context, 0.02),
+
+                    // SuggestionsSection
+                    HomeSuggestionsSection(
+                      suggestions: controller.dailySuggestions.toList(),
+                      onSuggestionTap: (starterMessage) =>
+                          controller.navigateToChat(starterMessage: starterMessage),
+                    ),
+                  ],
+                ),
               ),
-
-              AppSpacing.vertical(context, 0.02),
-
-              // ChatCtaCard
-              HomeChatCtaCard(
-                hasActiveChat: controller.hasActiveChat.value,
-                lastMessageSnippet: controller.lastMessage.value?.message,
-                lastMessageTime: controller.lastMessage.value?.timestamp,
-                onTap: () => controller.navigateToChat(),
-              ),
-
-              AppSpacing.vertical(context, 0.02),
-
-              // SuggestionsSection
-              HomeSuggestionsSection(
-                suggestions: controller.dailySuggestions.toList(),
-                onSuggestionTap: (starterMessage) =>
-                    controller.navigateToChat(starterMessage: starterMessage),
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       }),
     );

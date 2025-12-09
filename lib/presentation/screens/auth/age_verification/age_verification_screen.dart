@@ -33,6 +33,7 @@ class AgeVerificationScreen extends GetView<AgeVerificationController> {
         backgroundColor: AppColors.lightBackground,
         body: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Step Indicator (Step 1 of 2) - Full width, equally split
               AppDotsIndicator(
@@ -42,18 +43,21 @@ class AgeVerificationScreen extends GetView<AgeVerificationController> {
                 activeColor: AppColors.primary, // Completed steps
                 inactiveColor: AppColors.secondary, // Remaining steps
               ),
-              
+
+              // Auth Header
+              Padding(
+                padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(bottom: 0),
+                child: AuthHeader(
+                  title: AppTexts.ageVerificationTitle,
+                  subtitle: AppTexts.ageVerificationSubtitle,
+                ),
+              ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02),
+                  padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(top: 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Auth Header
-                      AuthHeader(
-                        title: AppTexts.ageVerificationTitle,
-                        subtitle: AppTexts.ageVerificationSubtitle,
-                      ),
 
                 // Date of Birth Label
                 Text(

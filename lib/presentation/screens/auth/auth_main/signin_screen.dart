@@ -30,107 +30,118 @@ class SigninScreen extends GetView<SigninController> {
       child: Scaffold(
       backgroundColor: AppColors.lightBackground,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02),
-          child: Form(
-            key: controller.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              // Auth Header
-              AuthHeader(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed Header
+            Padding(
+              padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(bottom: 0),
+              child: AuthHeader(
                 title: AppTexts.signinTitle,
                 subtitle: AppTexts.signinWelcomeMessage,
               ),
-
-              // Email Field
-              AppTextField(
-                label: AppTexts.emailLabel,
-                hintText: AppTexts.emailHint,
-                controller: controller.emailController,
-                keyboardType: TextInputType.emailAddress,
-                validator: controller.validateEmail,
-              ),
-              AppSpacing.vertical(context, 0.01),
-
-              // Password Field
-              Obx(
-                () => AppTextField(
-                  label: AppTexts.passwordLabel,
-                  hintText: AppTexts.passwordHint,
-                  controller: controller.passwordController,
-                  obscureText: controller.isPasswordVisible.value,
-                  showPasswordToggle: true,
-                  onTogglePassword: controller.togglePasswordVisibility,
-                  validator: controller.validatePassword,
-                ),
-              ),
-              AppSpacing.vertical(context, 0.01),
-
-              // Forgot Password Link
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: GestureDetector(
-              //     onTap: controller.forgotPassword,
-              //     child: Text(
-              //       AppTexts.forgotPassword,
-              //       style: AppTextStyles.bodyText(context).copyWith(
-              //         color: AppColors.primary,
-              //         fontSize: AppResponsive.scaleSize(context, 14),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              AppSpacing.vertical(context, 0.04),
-
-              // Login Button
-              Obx(
-                () => AppLargeButton(
-                  text: AppTexts.loginButton,
-                  onPressed: controller.isFormValid.value
-                      ? controller.signIn
-                      : null,
-                  isLoading: controller.isLoading.value,
-                ),
-              ),
-              AppSpacing.vertical(context, 0.04),
-
-              // Divider with "Or continue with"
-              Row(
-                children: [
-                  Expanded(
-                    child: Divider(color: AppColors.lightGrey, thickness: 1),
-                  ),
-                  Padding(
-                    padding: AppSpacing.symmetric(context, h: 0.02, v: 0),
-                    child: Text(
-                      AppTexts.orContinueWith,
-                      style: TextStyle(
-                        color: AppColors.grey,
-                        fontSize: AppResponsive.scaleSize(context, 14),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(color: AppColors.lightGrey, thickness: 1),
-                  ),
-                ],
-              ),
-              AppSpacing.vertical(context, 0.04),
-
-              // Google Sign In Button
-              AppSocialButton(
-                text: AppTexts.continueWithGoogle,
-                imagePath: AppImages.googleLogo,
-                onPressed: controller.signInWithGoogle,
-              ),
-              AppSpacing.vertical(context, 0.04),
-
-              // Auth Footer
-              AuthFooter(type: AuthFooterType.signin),
-              ],
             ),
-          ),
+
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: AppSpacing.symmetric(context, h: 0.04, v: 0.02).copyWith(top: 0),
+                child: Form(
+                  key: controller.formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Email Field
+                      AppTextField(
+                        label: AppTexts.emailLabel,
+                        hintText: AppTexts.emailHint,
+                        controller: controller.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: controller.validateEmail,
+                      ),
+                      AppSpacing.vertical(context, 0.01),
+
+                      // Password Field
+                      Obx(
+                        () => AppTextField(
+                          label: AppTexts.passwordLabel,
+                          hintText: AppTexts.passwordHint,
+                          controller: controller.passwordController,
+                          obscureText: controller.isPasswordVisible.value,
+                          showPasswordToggle: true,
+                          onTogglePassword: controller.togglePasswordVisibility,
+                          validator: controller.validatePassword,
+                        ),
+                      ),
+                      AppSpacing.vertical(context, 0.01),
+
+                      // Forgot Password Link
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: GestureDetector(
+                      //     onTap: controller.forgotPassword,
+                      //     child: Text(
+                      //       AppTexts.forgotPassword,
+                      //       style: AppTextStyles.bodyText(context).copyWith(
+                      //         color: AppColors.primary,
+                      //         fontSize: AppResponsive.scaleSize(context, 14),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      AppSpacing.vertical(context, 0.04),
+
+                      // Login Button
+                      Obx(
+                        () => AppLargeButton(
+                          text: AppTexts.loginButton,
+                          onPressed: controller.isFormValid.value
+                              ? controller.signIn
+                              : null,
+                          isLoading: controller.isLoading.value,
+                        ),
+                      ),
+                      AppSpacing.vertical(context, 0.04),
+
+                      // Divider with "Or continue with"
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(color: AppColors.lightGrey, thickness: 1),
+                          ),
+                          Padding(
+                            padding: AppSpacing.symmetric(context, h: 0.02, v: 0),
+                            child: Text(
+                              AppTexts.orContinueWith,
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: AppResponsive.scaleSize(context, 14),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(color: AppColors.lightGrey, thickness: 1),
+                          ),
+                        ],
+                      ),
+                      AppSpacing.vertical(context, 0.04),
+
+                      // Google Sign In Button
+                      AppSocialButton(
+                        text: AppTexts.continueWithGoogle,
+                        imagePath: AppImages.googleLogo,
+                        onPressed: controller.signInWithGoogle,
+                      ),
+                      AppSpacing.vertical(context, 0.04),
+
+                      // Auth Footer
+                      AuthFooter(type: AuthFooterType.signin),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       ),
