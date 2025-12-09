@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../../widgets/common/app_screen_header.dart';
-import '../../widgets/subscription/subscription_plan_card.dart';
-import '../../widgets/subscription/subscription_header_section.dart';
-import '../../controllers/subscription/subscription_controller.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/widgets/common/app_screen_header.dart';
+import 'package:amorra/presentation/widgets/subscription/subscription_plan_card.dart';
+import 'package:amorra/presentation/widgets/subscription/subscription_header_section.dart';
+import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
 
 /// Subscription Screen
 /// Eye-catching subscription screen with plan selection

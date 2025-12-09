@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../../../data/models/chat_message_model.dart';
-import '../../../domain/services/chat_service.dart';
-import '../base_controller.dart';
-import '../../../core/config/app_config.dart';
-import '../auth/auth_controller.dart';
-import '../../../data/services/chat_api_service.dart';
+import 'package:amorra/data/models/chat_message_model.dart';
+import 'package:amorra/domain/services/chat_service.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
+import 'package:amorra/data/services/chat_api_service.dart';
 
 /// Chat Controller
 /// Handles chat interface logic and state

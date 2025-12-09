@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../controllers/splash/splash_controller.dart';
-import '../../data/repositories/auth_repository.dart';
+import 'package:amorra/presentation/controllers/splash/splash_controller.dart';
+import 'package:amorra/data/repositories/auth_repository.dart';
 
 /// Splash Binding
 /// Dependency injection for splash screen

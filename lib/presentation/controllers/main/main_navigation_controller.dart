@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../base_controller.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
 
 /// Main Navigation Controller
 /// Handles bottom navigation bar state

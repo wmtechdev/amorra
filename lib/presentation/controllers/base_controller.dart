@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
-import '../../presentation/widgets/common/app_snackbar.dart';
+import 'package:amorra/presentation/widgets/common/app_snackbar.dart';
 
 /// Base Controller
 /// Base class for all controllers with common functionality

@@ -1,4 +1,4 @@
-import 'base_model.dart';
+import 'package:amorra/data/models/base_model.dart';
 
 /// User Model
 /// Represents user data structure
@@ -90,7 +90,8 @@ class UserModel extends BaseModel {
       isSubscribed: isSubscribed ?? this.isSubscribed,
       subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
       isAgeVerified: isAgeVerified ?? this.isAgeVerified,
-      isOnboardingCompleted: isOnboardingCompleted ?? this.isOnboardingCompleted,
+      isOnboardingCompleted:
+          isOnboardingCompleted ?? this.isOnboardingCompleted,
       isBlocked: isBlocked ?? this.isBlocked,
     );
   }
@@ -100,4 +101,3 @@ class UserModel extends BaseModel {
     return UserModel.fromJson(json);
   }
 }
-

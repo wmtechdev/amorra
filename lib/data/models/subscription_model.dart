@@ -1,4 +1,4 @@
-import 'base_model.dart';
+import 'package:amorra/data/models/base_model.dart';
 
 /// Subscription Model
 /// Represents subscription data structure
@@ -32,7 +32,9 @@ class SubscriptionModel extends BaseModel {
   });
 
   /// Check if subscription is active
-  bool get isActive => status == 'active' && (endDate == null || endDate!.isAfter(DateTime.now()));
+  bool get isActive =>
+      status == 'active' &&
+      (endDate == null || endDate!.isAfter(DateTime.now()));
 
   /// Create SubscriptionModel from Firestore document
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) {
@@ -107,4 +109,3 @@ class SubscriptionModel extends BaseModel {
     return SubscriptionModel.fromJson(json);
   }
 }
-

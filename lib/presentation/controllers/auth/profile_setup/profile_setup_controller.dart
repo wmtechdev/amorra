@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../../core/config/routes.dart';
-import '../../../../core/utils/app_texts/app_texts.dart';
-import '../../../../data/services/firebase_service.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../base_controller.dart';
+import 'package:amorra/core/config/routes.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/data/services/firebase_service.dart';
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
 
 
 /// Profile Setup Controller

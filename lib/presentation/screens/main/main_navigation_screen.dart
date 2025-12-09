@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../controllers/main/main_navigation_controller.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../home/home_screen.dart';
-import '../chat/chat_screen.dart';
-import '../subscription/subscription_screen.dart';
-import '../profile/profile_screen.dart';
+import 'package:amorra/presentation/controllers/main/main_navigation_controller.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/screens/home/home_screen.dart';
+import 'package:amorra/presentation/screens/chat/chat_screen.dart';
+import 'package:amorra/presentation/screens/subscription/subscription_screen.dart';
+import 'package:amorra/presentation/screens/profile/profile_screen.dart';
 
 /// Main Navigation Screen
 /// Contains bottom navigation bar and switches between main screens

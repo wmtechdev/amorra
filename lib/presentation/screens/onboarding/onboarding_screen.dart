@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_images/app_images.dart';
-import '../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../../controllers/onboarding/onboarding_controller.dart';
-import '../../widgets/common/app_dots_indicator.dart';
-import '../../widgets/common/app_large_button.dart';
-import '../../widgets/common/app_text_button.dart';
-import '../../widgets/onboarding/onboarding_page_widget.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_images/app_images.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/controllers/onboarding/onboarding_controller.dart';
+import 'package:amorra/presentation/widgets/common/app_dots_indicator.dart';
+import 'package:amorra/presentation/widgets/common/app_large_button.dart';
+import 'package:amorra/presentation/widgets/common/app_text_button.dart';
+import 'package:amorra/presentation/widgets/onboarding/onboarding_page_widget.dart';
 
 /// Onboarding Screen
 /// Displays 3 onboarding screens with swipe functionality

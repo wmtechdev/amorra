@@ -1,8 +1,8 @@
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/models/daily_suggestion_model.dart';
+import 'package:amorra/data/services/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../../core/constants/app_constants.dart';
-import '../models/daily_suggestion_model.dart';
-import '../services/firebase_service.dart';
 
 /// Suggestions Repository
 /// Handles daily suggestions data operations from Firestore
@@ -18,60 +18,68 @@ class SuggestionsRepository {
           .where('isActive', isEqualTo: true)
           .snapshots()
           .map((snapshot) {
-        if (snapshot.docs.isEmpty) {
-          if (kDebugMode) {
-            print('ℹ️ No active suggestions found in Firestore');
-          }
-          return <DailySuggestionModel>[];
-        }
-
-        final suggestions = snapshot.docs
-            .map((doc) {
-              try {
-                final data = doc.data() as Map<String, dynamic>;
-                return DailySuggestionModel.fromJson({
-                  'id': doc.id,
-                  ...data,
-                });
-              } catch (e) {
-                if (kDebugMode) {
-                  print('❌ Error parsing suggestion ${doc.id}: $e');
-                }
-                return null;
+            if (snapshot.docs.isEmpty) {
+              if (kDebugMode) {
+                print('ℹ️ No active suggestions found in Firestore');
               }
-            })
-            .whereType<DailySuggestionModel>()
-            .toList();
+              return <DailySuggestionModel>[];
+            }
 
-        // Sort by priority (high > medium > low), then by createdAt (oldest first)
-        suggestions.sort((a, b) {
-          // First sort by priority
-          final priorityCompare = a.priority.sortOrder.compareTo(b.priority.sortOrder);
-          if (priorityCompare != 0) {
-            return priorityCompare;
-          }
-          // If same priority, sort by createdAt (oldest first)
-          return a.createdAt.compareTo(b.createdAt);
-        });
+            final suggestions = snapshot.docs
+                .map((doc) {
+                  try {
+                    final data = doc.data() as Map<String, dynamic>;
+                    return DailySuggestionModel.fromJson({
+                      'id': doc.id,
+                      ...data,
+                    });
+                  } catch (e) {
+                    if (kDebugMode) {
+                      print('❌ Error parsing suggestion ${doc.id}: $e');
+                    }
+                    return null;
+                  }
+                })
+                .whereType<DailySuggestionModel>()
+                .toList();
 
-        if (kDebugMode) {
-          print('✅ Stream update: ${suggestions.length} active suggestions');
-          print('   Priority breakdown: ${_getPriorityBreakdown(suggestions)}');
-        }
+            // Sort by priority (high > medium > low), then by createdAt (oldest first)
+            suggestions.sort((a, b) {
+              // First sort by priority
+              final priorityCompare = a.priority.sortOrder.compareTo(
+                b.priority.sortOrder,
+              );
+              if (priorityCompare != 0) {
+                return priorityCompare;
+              }
+              // If same priority, sort by createdAt (oldest first)
+              return a.createdAt.compareTo(b.createdAt);
+            });
 
-        return suggestions;
-      }).handleError((error) {
-        if (kDebugMode) {
-          print('❌ Stream error: $error');
-          if (error.toString().contains('index') || error.toString().contains('PERMISSION')) {
-            print('⚠️ Firestore index or permission issue!');
-            print('   Check: 1) Firestore rules allow read access');
-            print('         2) All documents have required fields');
-          }
-        }
-        // Re-throw to let controller handle it
-        throw error;
-      });
+            if (kDebugMode) {
+              print(
+                '✅ Stream update: ${suggestions.length} active suggestions',
+              );
+              print(
+                '   Priority breakdown: ${_getPriorityBreakdown(suggestions)}',
+              );
+            }
+
+            return suggestions;
+          })
+          .handleError((error) {
+            if (kDebugMode) {
+              print('❌ Stream error: $error');
+              if (error.toString().contains('index') ||
+                  error.toString().contains('PERMISSION')) {
+                print('⚠️ Firestore index or permission issue!');
+                print('   Check: 1) Firestore rules allow read access');
+                print('         2) All documents have required fields');
+              }
+            }
+            // Re-throw to let controller handle it
+            throw error;
+          });
     } catch (e) {
       if (kDebugMode) {
         print('❌ Get active suggestions stream error: $e');
@@ -83,9 +91,15 @@ class SuggestionsRepository {
 
   /// Get priority breakdown for debugging
   String _getPriorityBreakdown(List<DailySuggestionModel> suggestions) {
-    final high = suggestions.where((s) => s.priority == SuggestionPriority.high).length;
-    final medium = suggestions.where((s) => s.priority == SuggestionPriority.medium).length;
-    final low = suggestions.where((s) => s.priority == SuggestionPriority.low).length;
+    final high = suggestions
+        .where((s) => s.priority == SuggestionPriority.high)
+        .length;
+    final medium = suggestions
+        .where((s) => s.priority == SuggestionPriority.medium)
+        .length;
+    final low = suggestions
+        .where((s) => s.priority == SuggestionPriority.low)
+        .length;
     return 'High: $high, Medium: $medium, Low: $low';
   }
 
@@ -102,10 +116,7 @@ class SuggestionsRepository {
           .map((doc) {
             try {
               final data = doc.data() as Map<String, dynamic>;
-              return DailySuggestionModel.fromJson({
-                'id': doc.id,
-                ...data,
-              });
+              return DailySuggestionModel.fromJson({'id': doc.id, ...data});
             } catch (e) {
               if (kDebugMode) {
                 print('❌ Error parsing suggestion ${doc.id}: $e');
@@ -119,7 +130,9 @@ class SuggestionsRepository {
       // Sort by priority (high > medium > low), then by createdAt (oldest first)
       suggestions.sort((a, b) {
         // First sort by priority
-        final priorityCompare = a.priority.sortOrder.compareTo(b.priority.sortOrder);
+        final priorityCompare = a.priority.sortOrder.compareTo(
+          b.priority.sortOrder,
+        );
         if (priorityCompare != 0) {
           return priorityCompare;
         }
@@ -152,10 +165,7 @@ class SuggestionsRepository {
           .map((doc) {
             try {
               final data = doc.data() as Map<String, dynamic>;
-              return DailySuggestionModel.fromJson({
-                'id': doc.id,
-                ...data,
-              });
+              return DailySuggestionModel.fromJson({'id': doc.id, ...data});
             } catch (e) {
               if (kDebugMode) {
                 print('❌ Error parsing suggestion ${doc.id}: $e');
@@ -168,7 +178,9 @@ class SuggestionsRepository {
 
       // Sort by priority (high > medium > low), then by createdAt (oldest first)
       suggestions.sort((a, b) {
-        final priorityCompare = a.priority.sortOrder.compareTo(b.priority.sortOrder);
+        final priorityCompare = a.priority.sortOrder.compareTo(
+          b.priority.sortOrder,
+        );
         if (priorityCompare != 0) {
           return priorityCompare;
         }
@@ -192,7 +204,7 @@ class SuggestionsRepository {
       final json = suggestion.toJson();
       // Remove id from JSON as it's the document ID
       json.remove('id');
-      
+
       // Use serverTimestamp for createdAt and updatedAt (auto-set by Firestore)
       json['createdAt'] = FieldValue.serverTimestamp();
       json['updatedAt'] = FieldValue.serverTimestamp();
@@ -272,15 +284,18 @@ class SuggestionsRepository {
 
   /// Toggle suggestion active status - for admin use
   /// updatedAt is automatically set by Firestore server
-  Future<void> toggleSuggestionActive(String suggestionId, bool isActive) async {
+  Future<void> toggleSuggestionActive(
+    String suggestionId,
+    bool isActive,
+  ) async {
     try {
       await _firebaseService
           .collection(AppConstants.collectionDailySuggestions)
           .doc(suggestionId)
           .update({
-        'isActive': isActive,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'isActive': isActive,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
       if (kDebugMode) {
         print('✅ Toggled suggestion $suggestionId to $isActive');
@@ -304,12 +319,14 @@ class SuggestionsRepository {
           .collection(AppConstants.collectionDailySuggestions)
           .doc(suggestionId)
           .update({
-        'priority': priority.value,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'priority': priority.value,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
       if (kDebugMode) {
-        print('✅ Updated suggestion $suggestionId priority to ${priority.value}');
+        print(
+          '✅ Updated suggestion $suggestionId priority to ${priority.value}',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -319,4 +336,3 @@ class SuggestionsRepository {
     }
   }
 }
-

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/subscription/subscription_controller.dart';
+import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
 
 /// Subscription Binding
 /// Dependency injection for subscription-related controllers

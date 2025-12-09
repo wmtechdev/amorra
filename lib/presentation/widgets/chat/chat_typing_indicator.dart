@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 
 /// Chat Typing Indicator Widget
 /// Animated dots showing AI is typing

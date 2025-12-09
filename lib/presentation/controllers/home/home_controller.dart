@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
-import '../../../data/models/chat_message_model.dart';
-import '../../../data/models/user_model.dart';
-import '../../../data/models/daily_suggestion_model.dart';
-import '../../../data/repositories/chat_repository.dart';
-import '../../../data/repositories/suggestions_repository.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../base_controller.dart';
-import '../auth/auth_controller.dart';
+import 'package:amorra/data/models/chat_message_model.dart';
+import 'package:amorra/data/models/user_model.dart';
+import 'package:amorra/data/models/daily_suggestion_model.dart';
+import 'package:amorra/data/repositories/chat_repository.dart';
+import 'package:amorra/data/repositories/suggestions_repository.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
+import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 
 /// Home Controller
 /// Handles home screen logic and state

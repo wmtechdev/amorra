@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 import 'subscription_plan_header.dart';
 import 'subscription_plan_features.dart';
 import 'subscription_plan_action.dart';

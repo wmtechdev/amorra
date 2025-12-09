@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
 
 /// App Gradient Extension
 /// Provides reusable gradient decoration extension

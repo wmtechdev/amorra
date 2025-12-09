@@ -2,16 +2,16 @@ import 'package:amorra/core/utils/app_gradient/app_gradient.dart';
 import 'package:amorra/core/utils/app_images/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_styles/app_text_styles.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../controllers/chat/chat_controller.dart';
-import '../../widgets/chat/chat_message_bubble.dart';
-import '../../widgets/chat/chat_typing_indicator.dart';
-import '../../widgets/chat/chat_input_field.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/presentation/controllers/chat/chat_controller.dart';
+import 'package:amorra/presentation/widgets/chat/chat_message_bubble.dart';
+import 'package:amorra/presentation/widgets/chat/chat_typing_indicator.dart';
+import 'package:amorra/presentation/widgets/chat/chat_input_field.dart';
 
 /// Chat Screen
 /// Full chat interface with messages, typing indicator, and input field

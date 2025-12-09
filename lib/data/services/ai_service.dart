@@ -1,18 +1,20 @@
 import 'dart:convert';
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/core/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import '../../core/config/app_config.dart';
-import '../../core/constants/api_constants.dart';
 
 /// AI Service
 /// Handles AI/LLM API calls for chat responses
 class AIService {
   static final AIService _instance = AIService._internal();
+
   factory AIService() => _instance;
+
   AIService._internal();
 
   /// Send message to AI and get response
-  /// 
+  ///
   /// [message] - User's message
   /// [context] - Previous messages for context (optional)
   /// [userId] - User ID for personalization
@@ -24,18 +26,17 @@ class AIService {
     try {
       // TODO: Replace with your actual AI API endpoint and key
       const apiKey = 'YOUR_API_KEY_HERE'; // Store in secure storage/environment
-      
-      final url = Uri.parse('${ApiConstants.aiApiBaseUrl}${ApiConstants.endpointChat}');
-      
+
+      final url = Uri.parse(
+        '${ApiConstants.aiApiBaseUrl}${ApiConstants.endpointChat}',
+      );
+
       // Prepare messages for context
       final messages = <Map<String, String>>[];
-      
+
       // Add system prompt
-      messages.add({
-        'role': 'system',
-        'content': _getSystemPrompt(userId),
-      });
-      
+      messages.add({'role': 'system', 'content': _getSystemPrompt(userId)});
+
       // Add context messages if available
       if (context != null && context.isNotEmpty) {
         // Only use last N messages for context
@@ -44,26 +45,26 @@ class AIService {
             : context;
         messages.addAll(recentContext);
       }
-      
+
       // Add current user message
-      messages.add({
-        'role': 'user',
-        'content': message,
-      });
-      
-      final response = await http.post(
-        url,
-        headers: {
-          ApiConstants.headerContentType: ApiConstants.contentTypeJson,
-          ApiConstants.headerAuthorization: '${ApiConstants.headerBearer} $apiKey',
-        },
-        body: jsonEncode({
-          'model': 'gpt-3.5-turbo', // or your preferred model
-          'messages': messages,
-          'temperature': 0.7,
-          'max_tokens': 500,
-        }),
-      ).timeout(AppConfig.aiResponseTimeout);
+      messages.add({'role': 'user', 'content': message});
+
+      final response = await http
+          .post(
+            url,
+            headers: {
+              ApiConstants.headerContentType: ApiConstants.contentTypeJson,
+              ApiConstants.headerAuthorization:
+                  '${ApiConstants.headerBearer} $apiKey',
+            },
+            body: jsonEncode({
+              'model': 'gpt-3.5-turbo', // or your preferred model
+              'messages': messages,
+              'temperature': 0.7,
+              'max_tokens': 500,
+            }),
+          )
+          .timeout(AppConfig.aiResponseTimeout);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -113,19 +114,19 @@ Your goal is to provide emotional comfort, reduce loneliness, and create a sense
       // TODO: Implement content moderation
       // This can use OpenAI's moderation API or a custom service
       // For now, basic checks
-      
+
       // Basic keyword filtering (expand as needed)
       final blockedWords = [
         // Add inappropriate words here
       ];
-      
+
       final lowerContent = content.toLowerCase();
       for (final word in blockedWords) {
         if (lowerContent.contains(word.toLowerCase())) {
           return false;
         }
       }
-      
+
       return true;
     } catch (e) {
       if (kDebugMode) {
@@ -135,4 +136,3 @@ Your goal is to provide emotional comfort, reduce loneliness, and create a sense
     }
   }
 }
-

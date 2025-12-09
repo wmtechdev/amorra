@@ -1,10 +1,10 @@
 import 'package:amorra/presentation/controllers/auth/profile_setup/profile_setup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/utils/app_colors/app_colors.dart';
-import '../../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../../core/utils/app_spacing/app_spacing.dart';
-import '../../common/app_checkbox.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/presentation/widgets/common/app_checkbox.dart';
 
 
 /// Profile Setup Topics Section Widget

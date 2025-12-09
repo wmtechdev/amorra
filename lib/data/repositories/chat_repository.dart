@@ -1,7 +1,7 @@
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/models/chat_message_model.dart';
+import 'package:amorra/data/services/firebase_service.dart';
 import 'package:flutter/foundation.dart';
-import '../../core/constants/app_constants.dart';
-import '../models/chat_message_model.dart';
-import '../services/firebase_service.dart';
 
 /// Chat Repository
 /// Handles chat-related data operations
@@ -18,14 +18,14 @@ class ChatRepository {
           .orderBy('timestamp', descending: true)
           .snapshots()
           .map((snapshot) {
-        return snapshot.docs
-            .map((doc) => ChatMessageModel.fromJson({
-                  'id': doc.id,
-                  ...doc.data(),
-                }))
-            .toList()
-          ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-      });
+            return snapshot.docs
+                .map(
+                  (doc) =>
+                      ChatMessageModel.fromJson({'id': doc.id, ...doc.data()}),
+                )
+                .toList()
+              ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+          });
     } catch (e) {
       if (kDebugMode) {
         print('Get messages stream error: $e');
@@ -66,10 +66,9 @@ class ChatRepository {
           .get();
 
       return snapshot.docs
-          .map((doc) => ChatMessageModel.fromJson({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map(
+            (doc) => ChatMessageModel.fromJson({'id': doc.id, ...doc.data()}),
+          )
           .toList()
         ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
     } catch (e) {
@@ -147,4 +146,3 @@ class ChatRepository {
     }
   }
 }
-

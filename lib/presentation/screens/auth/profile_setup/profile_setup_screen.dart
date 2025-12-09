@@ -2,16 +2,16 @@ import 'package:amorra/presentation/controllers/auth/profile_setup/profile_setup
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../widgets/common/app_dots_indicator.dart';
-import '../../../widgets/common/app_large_button.dart';
-import '../../../widgets/common/app_text_field_error_message.dart';
-import '../../../widgets/auth/auth_main/auth_header.dart';
-import '../../../widgets/auth/profile_setup/profile_setup_form_section.dart';
-import '../../../widgets/auth/profile_setup/profile_setup_dropdown_field.dart';
-import '../../../widgets/auth/profile_setup/profile_setup_topics_section.dart';
-import '../../../../core/utils/app_colors/app_colors.dart';
-import '../../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../../core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/widgets/common/app_dots_indicator.dart';
+import 'package:amorra/presentation/widgets/common/app_large_button.dart';
+import 'package:amorra/presentation/widgets/common/app_text_field_error_message.dart';
+import 'package:amorra/presentation/widgets/auth/auth_main/auth_header.dart';
+import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_form_section.dart';
+import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_dropdown_field.dart';
+import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_topics_section.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
 /// Profile Setup Screen
 /// Collects user preferences after age verification
 /// Mandatory screen - prevents back navigation
