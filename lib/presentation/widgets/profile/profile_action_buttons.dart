@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
 import '../../widgets/common/app_large_button.dart';
 
 /// Profile Action Buttons Widget

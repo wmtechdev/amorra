@@ -1,9 +1,9 @@
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/models/chat_message_model.dart';
+import 'package:amorra/data/repositories/chat_repository.dart';
+import 'package:amorra/data/services/ai_service.dart';
 import 'package:flutter/foundation.dart';
-import '../../data/models/chat_message_model.dart';
-import '../../data/repositories/chat_repository.dart';
-import '../../data/services/ai_service.dart';
-import '../../core/config/app_config.dart';
-import '../../core/constants/app_constants.dart';
 
 /// Chat Service
 /// Business logic for chat operations
@@ -53,7 +53,9 @@ class ChatService {
       // Prepare context for AI
       final context = recentMessages.map((msg) {
         return {
-          'role': msg.type == AppConstants.messageTypeUser ? 'user' : 'assistant',
+          'role': msg.type == AppConstants.messageTypeUser
+              ? 'user'
+              : 'assistant',
           'content': msg.message,
         };
       }).toList();
@@ -99,4 +101,3 @@ class ChatService {
     return await _chatRepository.getRecentMessages(userId, limit);
   }
 }
-

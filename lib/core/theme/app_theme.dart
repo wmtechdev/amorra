@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors/app_colors.dart';
-import '../utils/app_fonts/app_fonts.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_fonts/app_fonts.dart';
 
 /// App Theme Configuration
 /// Contains all theme-related configurations

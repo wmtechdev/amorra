@@ -1,10 +1,10 @@
 import 'package:amorra/presentation/controllers/auth/auth_main/signup_controller.dart';
 import 'package:get/get.dart';
-import '../controllers/auth/auth_controller.dart';
-import '../controllers/auth/auth_main/signin_controller.dart';
-import '../../domain/services/chat_service.dart';
-import '../../data/repositories/auth_repository.dart';
-import '../../data/repositories/chat_repository.dart';
+import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
+import 'package:amorra/presentation/controllers/auth/auth_main/signin_controller.dart';
+import 'package:amorra/domain/services/chat_service.dart';
+import 'package:amorra/data/repositories/auth_repository.dart';
+import 'package:amorra/data/repositories/chat_repository.dart';
 
 /// Auth Binding
 /// Dependency injection for auth-related controllers

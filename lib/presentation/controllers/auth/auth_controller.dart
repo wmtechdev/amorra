@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import '../../../data/models/user_model.dart';
-import '../../../data/repositories/auth_repository.dart';
-import '../../../core/utils/firebase_error_handler.dart';
-import '../base_controller.dart';
+import 'package:amorra/data/models/user_model.dart';
+import 'package:amorra/data/repositories/auth_repository.dart';
+import 'package:amorra/core/utils/firebase_error_handler.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
 
 /// Auth Controller
 /// Handles authentication logic and state

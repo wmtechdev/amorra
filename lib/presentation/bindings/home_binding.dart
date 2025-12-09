@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/home/home_controller.dart';
+import 'package:amorra/presentation/controllers/home/home_controller.dart';
 
 /// Home Binding
 /// Initializes HomeController when HomeScreen is accessed

@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
-import '../../../data/models/subscription_model.dart';
-import '../../../core/config/app_config.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../data/services/firebase_service.dart';
-import '../base_controller.dart';
+import 'package:amorra/data/models/subscription_model.dart';
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/services/firebase_service.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
 
 /// Subscription Controller
 /// Handles subscription logic and state

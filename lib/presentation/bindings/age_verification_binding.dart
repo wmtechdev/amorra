@@ -1,6 +1,6 @@
+import 'package:amorra/data/repositories/auth_repository.dart';
+import 'package:amorra/presentation/controllers/auth/age_verification/age_verification_controller.dart';
 import 'package:get/get.dart';
-import '../../data/repositories/auth_repository.dart';
-import '../controllers/auth/age_verification/age_verification_controller.dart';
 
 /// Age Verification Binding
 /// Provides dependencies for Age Verification screen

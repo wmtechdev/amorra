@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../core/config/app_config.dart';
-import '../../../core/config/routes.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../screens/core/not_found_screen.dart';
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/core/config/routes.dart';
+import 'package:amorra/core/theme/app_theme.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/presentation/screens/core/not_found_screen.dart';
 
 /// App Material Widget
 /// Wraps the GetMaterialApp with all configurations

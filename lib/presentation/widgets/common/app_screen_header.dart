@@ -1,8 +1,8 @@
 import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 import 'package:flutter/material.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_images/app_images.dart';
-import '../../../core/utils/app_styles/app_text_styles.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_images/app_images.dart';
+import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 
 /// App Screen Header Widget
 /// Reusable header widget for screens with consistent styling

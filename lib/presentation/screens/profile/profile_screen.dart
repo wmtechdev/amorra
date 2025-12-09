@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_styles/app_text_styles.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../../widgets/common/app_screen_header.dart';
-import '../../widgets/profile/profile_header_card.dart';
-import '../../widgets/profile/profile_user_info_card.dart';
-import '../../widgets/profile/profile_action_buttons.dart';
-import '../../widgets/profile/profile_subscription_card.dart';
-import '../../widgets/profile/profile_safety_section.dart';
-import '../../controllers/profile/profile_controller.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/widgets/common/app_screen_header.dart';
+import 'package:amorra/presentation/widgets/profile/profile_header_card.dart';
+import 'package:amorra/presentation/widgets/profile/profile_user_info_card.dart';
+import 'package:amorra/presentation/widgets/profile/profile_action_buttons.dart';
+import 'package:amorra/presentation/widgets/profile/profile_subscription_card.dart';
+import 'package:amorra/presentation/widgets/profile/profile_safety_section.dart';
+import 'package:amorra/presentation/controllers/profile/profile_controller.dart';
 
 /// Profile Screen
 /// Eye-catching profile screen with user information and account management

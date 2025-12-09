@@ -1,11 +1,11 @@
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'firebase_config.dart';
-import '../../presentation/controllers/theme/theme_controller.dart';
-import '../utils/app_colors/app_colors.dart';
 
 /// App Initializer
 /// Handles all app initialization logic
@@ -31,7 +31,7 @@ class AppInitializer {
   /// Set status bar style for the whole app
   static void _setStatusBarStyle() {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
+       const SystemUiOverlayStyle(
         statusBarColor: AppColors.white,
         statusBarIconBrightness: Brightness.dark, // Dark icons for white background
         statusBarBrightness: Brightness.light, // For iOS

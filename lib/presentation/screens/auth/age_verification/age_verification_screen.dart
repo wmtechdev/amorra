@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../../core/utils/app_colors/app_colors.dart';
-import '../../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../../core/utils/app_styles/app_text_styles.dart';
-import '../../../../core/utils/app_texts/app_texts.dart';
-import '../../../controllers/auth/age_verification/age_verification_controller.dart';
-import '../../../widgets/common/app_date_picker.dart';
-import '../../../widgets/common/app_large_button.dart';
-import '../../../widgets/common/app_dots_indicator.dart';
-import '../../../widgets/common/app_text_field_error_message.dart';
-import '../../../widgets/auth/auth_main/auth_header.dart';
-import '../../../widgets/auth/age_verification/age_display.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/controllers/auth/age_verification/age_verification_controller.dart';
+import 'package:amorra/presentation/widgets/common/app_date_picker.dart';
+import 'package:amorra/presentation/widgets/common/app_large_button.dart';
+import 'package:amorra/presentation/widgets/common/app_dots_indicator.dart';
+import 'package:amorra/presentation/widgets/common/app_text_field_error_message.dart';
+import 'package:amorra/presentation/widgets/auth/auth_main/auth_header.dart';
+import 'package:amorra/presentation/widgets/auth/age_verification/age_display.dart';
 
 /// Age Verification Screen
 /// Mandatory screen for age verification (18+)

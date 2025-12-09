@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/foundation.dart';
 import '../base_controller.dart';
-import '../../../core/config/routes.dart';
-import '../../../core/constants/app_constants.dart';
-import '../../../data/repositories/auth_repository.dart';
-import '../../../data/services/firebase_service.dart';
+import 'package:amorra/core/config/routes.dart';
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/repositories/auth_repository.dart';
+import 'package:amorra/data/services/firebase_service.dart';
 
 /// Onboarding Controller
 /// Handles onboarding screen logic and navigation

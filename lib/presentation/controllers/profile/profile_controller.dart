@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../data/models/user_model.dart';
-import '../../../data/repositories/auth_repository.dart';
-import '../../../core/config/routes.dart';
-import '../../../core/config/app_config.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../base_controller.dart';
-import '../auth/auth_controller.dart';
-import '../subscription/subscription_controller.dart';
-import '../../widgets/common/app_alert_dialog.dart';
-import '../../widgets/common/app_password_dialog.dart';
+import 'package:amorra/data/models/user_model.dart';
+import 'package:amorra/data/repositories/auth_repository.dart';
+import 'package:amorra/core/config/routes.dart';
+import 'package:amorra/core/config/app_config.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/controllers/base_controller.dart';
+import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
+import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
+import 'package:amorra/presentation//widgets/common/app_alert_dialog.dart';
+import 'package:amorra/presentation//widgets/common/app_password_dialog.dart';
 
 /// Profile Controller
 /// Handles profile screen logic and state

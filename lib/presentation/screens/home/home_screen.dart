@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/utils/app_colors/app_colors.dart';
-import '../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../core/utils/app_texts/app_texts.dart';
-import '../../widgets/common/app_screen_header.dart';
-import '../../controllers/home/home_controller.dart';
-import '../../widgets/home/home_top_section.dart';
-import '../../widgets/home/home_chat_cta_card.dart';
-import '../../widgets/home/home_suggestions_section.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/widgets/common/app_screen_header.dart';
+import 'package:amorra/presentation/controllers/home/home_controller.dart';
+import 'package:amorra/presentation/widgets/home/home_top_section.dart';
+import 'package:amorra/presentation/widgets/home/home_chat_cta_card.dart';
+import 'package:amorra/presentation/widgets/home/home_suggestions_section.dart';
 
 /// Home Screen
 /// Main home screen with greeting, chat CTA, suggestions, and safety info

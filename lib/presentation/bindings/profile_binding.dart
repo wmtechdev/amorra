@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../presentation/controllers/profile/profile_controller.dart';
+import 'package:amorra/presentation/controllers/profile/profile_controller.dart';
 
 /// Profile Binding
 /// Provides ProfileController dependency injection

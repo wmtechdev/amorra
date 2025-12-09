@@ -1,10 +1,10 @@
+import 'package:amorra/core/constants/app_constants.dart';
+import 'package:amorra/data/models/user_model.dart';
+import 'package:amorra/data/services/firebase_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_model.dart';
-import '../services/firebase_service.dart';
-import '../../core/constants/app_constants.dart';
 
 /// Custom exception for when user needs to complete signup
 class SignupRequiredException implements Exception {

@@ -3,15 +3,15 @@ import 'package:amorra/presentation/controllers/auth/auth_main/signup_controller
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../../core/utils/app_colors/app_colors.dart';
-import '../../../../core/utils/app_responsive/app_responsive.dart';
-import '../../../../core/utils/app_spacing/app_spacing.dart';
-import '../../../../core/utils/app_texts/app_texts.dart';
-import '../../../widgets/common/app_text_field.dart';
-import '../../../widgets/common/app_large_button.dart';
-import '../../../widgets/common/app_social_button.dart';
-import '../../../widgets/auth/auth_main/auth_header.dart';
-import '../../../widgets/auth/auth_main/auth_footer.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
+import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
+import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/presentation/widgets/common/app_text_field.dart';
+import 'package:amorra/presentation/widgets/common/app_large_button.dart';
+import 'package:amorra/presentation/widgets/common/app_social_button.dart';
+import 'package:amorra/presentation/widgets/auth/auth_main/auth_header.dart';
+import 'package:amorra/presentation/widgets/auth/auth_main/auth_footer.dart';
 
 /// Sign Up Screen
 class SignupScreen extends GetView<SignupController> {
