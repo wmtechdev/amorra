@@ -40,7 +40,8 @@ class OnboardingPageWidget extends StatelessWidget {
             title,
             style: AppTextStyles.headline(context).copyWith(
               color: AppColors.black,
-              fontSize: AppResponsive.scaleSize(context, 24),
+              fontSize: AppResponsive.scaleSize(context, 26),
+              height: 1.2
             ),
             textAlign: TextAlign.center,
           ),
@@ -52,7 +53,8 @@ class OnboardingPageWidget extends StatelessWidget {
             subtitle,
             style: AppTextStyles.bodyText(context).copyWith(
               color: AppColors.grey,
-              fontSize: AppResponsive.scaleSize(context, 14),
+              fontSize: AppResponsive.scaleSize(context, 16),
+              height: 1.2
             ),
             textAlign: TextAlign.center,
           ),

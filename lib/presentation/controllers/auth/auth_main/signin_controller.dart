@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:amorra/presentation/controllers/base_controller.dart';
 import 'package:amorra/core/utils/validators.dart';
 import 'package:amorra/core/utils/firebase_error_handler.dart';
 import 'package:amorra/core/config/routes.dart' as routes;
-import 'package:amorra/core/constants/app_constants.dart';
 import 'package:amorra/data/repositories/auth_repository.dart';
 import 'package:amorra/data/services/firebase_service.dart';
 
@@ -16,7 +14,6 @@ class SigninController extends BaseController {
   // Repository - use Get.find to reuse existing instance
   AuthRepository get _authRepository => Get.find<AuthRepository>();
   final FirebaseService _firebaseService = FirebaseService();
-  final _storage = GetStorage();
 
   // Form key - unique instance
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -53,10 +50,11 @@ class SigninController extends BaseController {
   void _validateForm() {
     if (_isDisposed) return;
 
-    final emailFilled = emailController.text.trim().isNotEmpty;
-    final passwordFilled = passwordController.text.isNotEmpty;
+    // Use Validators to check if fields are valid
+    final emailValid = Validators.validateEmail(emailController.text.trim()) == null;
+    final passwordValid = Validators.validatePassword(passwordController.text) == null;
 
-    isFormValid.value = emailFilled && passwordFilled;
+    isFormValid.value = emailValid && passwordValid;
   }
 
   /// Validate email
@@ -97,9 +95,6 @@ class SigninController extends BaseController {
       );
 
       if (_isDisposed || _isNavigating) return;
-
-      // Mark onboarding as completed (in case user bypassed it)
-      await _markOnboardingCompleted();
 
       // Check age verification and profile setup status
       final currentUser = _firebaseService.currentUser;
@@ -177,9 +172,6 @@ class SigninController extends BaseController {
       await _authRepository.signInWithGoogle();
 
       if (_isDisposed || _isNavigating) return;
-
-      // Mark onboarding as completed (in case user bypassed it)
-      await _markOnboardingCompleted();
 
       // Check age verification and profile setup status
       final currentUser = _firebaseService.currentUser;
@@ -277,32 +269,6 @@ class SigninController extends BaseController {
         subtitle: 'Password recovery feature will be available shortly. Stay tuned!');
   }
 
-  /// Mark onboarding as completed
-  Future<void> _markOnboardingCompleted() async {
-    try {
-      // Save to local storage
-      await _storage.write(AppConstants.storageKeyOnboardingCompleted, true);
-
-      // Save to Firestore if user is authenticated
-      final currentUser = _firebaseService.currentUser;
-      if (currentUser != null) {
-        try {
-          await _authRepository.updateOnboardingCompletion(currentUser.uid);
-          if (kDebugMode) {
-            print('✅ Onboarding completion marked after signin');
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print('⚠️ Failed to save onboarding to Firestore: $e');
-          }
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('⚠️ Error marking onboarding completion: $e');
-      }
-    }
-  }
 
   @override
   void onClose() {

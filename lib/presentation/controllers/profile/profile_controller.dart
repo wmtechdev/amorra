@@ -7,6 +7,7 @@ import 'package:amorra/core/config/routes.dart';
 import 'package:amorra/core/config/app_config.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
 import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/core/utils/validators.dart';
 import 'package:amorra/presentation/controllers/base_controller.dart';
 import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
@@ -23,6 +24,7 @@ class ProfileController extends BaseController {
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   final RxBool isEditingName = false.obs;
   final RxString editedName = ''.obs;
+  final RxBool showNameUpdateAnimation = false.obs;
   final TextEditingController nameController = TextEditingController();
 
   // Get AuthController
@@ -127,8 +129,11 @@ class ProfileController extends BaseController {
     if (user.value == null) return;
 
     final newName = nameController.text.trim();
-    if (newName.isEmpty) {
-      showError('Invalid Name', subtitle: 'Name cannot be empty');
+    
+    // Use Validators to validate name
+    final nameValidationError = Validators.validateName(newName);
+    if (nameValidationError != null) {
+      showError('Invalid Name', subtitle: nameValidationError);
       return;
     }
 
@@ -147,9 +152,21 @@ class ProfileController extends BaseController {
       await _authController.updateUser(updatedUser);
       isEditingName.value = false;
       editedName.value = newName;
+
+      // Show completion animation
+      showNameUpdateAnimation.value = true;
+
+      // Wait for animation to complete (typically 2-3 seconds)
+      await Future.delayed(const Duration(seconds: 3));
+
+      // Hide animation
+      showNameUpdateAnimation.value = false;
     } catch (e) {
       setError(e.toString());
-      showError('Update Failed', subtitle: 'Failed to update name. Please try again.');
+      showError(
+        'Update Failed',
+        subtitle: 'Failed to update name. Please try again.',
+      );
     } finally {
       setLoading(false);
     }
@@ -174,12 +191,15 @@ class ProfileController extends BaseController {
     try {
       setLoading(true);
       await _authController.signOut();
-      
+
       // Navigate to signin screen
       Get.offAllNamed(AppRoutes.signin);
     } catch (e) {
       setError(e.toString());
-      showError('Logout Failed', subtitle: 'Failed to logout. Please try again.');
+      showError(
+        'Logout Failed',
+        subtitle: 'Failed to logout. Please try again.',
+      );
     } finally {
       setLoading(false);
     }
@@ -208,17 +228,17 @@ class ProfileController extends BaseController {
     try {
       setLoading(true);
       await _authRepository.deleteAccount(user.value!.id);
-      
+
       // Navigate to signin screen
       Get.offAllNamed(AppRoutes.signin);
-      
+
       showSuccess(
         'Account Deleted',
         subtitle: 'Your account has been permanently deleted.',
       );
     } on ReauthenticationRequiredException {
       setLoading(false);
-      
+
       // Show password dialog for re-authentication
       final passwordResult = await Get.dialog<String>(
         AppPasswordDialog(
@@ -241,29 +261,42 @@ class ProfileController extends BaseController {
       // Retry deletion with password
       try {
         setLoading(true);
-        await _authRepository.deleteAccount(user.value!.id, password: passwordResult);
-        
+        await _authRepository.deleteAccount(
+          user.value!.id,
+          password: passwordResult,
+        );
+
         // Navigate to signin screen
         Get.offAllNamed(AppRoutes.signin);
-        
+
         showSuccess(
           'Account Deleted',
           subtitle: 'Your account has been permanently deleted.',
         );
       } catch (retryError) {
         setError(retryError.toString());
-        if (retryError.toString().contains('wrong-password') || 
+        if (retryError.toString().contains('wrong-password') ||
             retryError.toString().contains('invalid-credential')) {
-          showError('Invalid Password', subtitle: 'The password you entered is incorrect. Please try again.');
+          showError(
+            'Invalid Password',
+            subtitle:
+                'The password you entered is incorrect. Please try again.',
+          );
         } else {
-          showError('Delete Failed', subtitle: 'Failed to delete account. Please try again.');
+          showError(
+            'Delete Failed',
+            subtitle: 'Failed to delete account. Please try again.',
+          );
         }
       } finally {
         setLoading(false);
       }
     } catch (e) {
       setError(e.toString());
-      showError('Delete Failed', subtitle: 'Failed to delete account. Please try again.');
+      showError(
+        'Delete Failed',
+        subtitle: 'Failed to delete account. Please try again.',
+      );
     } finally {
       setLoading(false);
     }
@@ -292,7 +325,8 @@ class ProfileController extends BaseController {
 
   /// Get remaining free messages
   int get remainingFreeMessages {
-    return _subscriptionController?.remainingFreeMessages.value ?? AppConfig.freeMessageLimit;
+    return _subscriptionController?.remainingFreeMessages.value ??
+        AppConfig.freeMessageLimit;
   }
 
   /// Get used messages (for progress indicator)
@@ -324,4 +358,3 @@ class ProfileController extends BaseController {
     }
   }
 }
-

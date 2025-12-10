@@ -28,7 +28,7 @@ class AppTextButton extends StatelessWidget {
       child: Text(
         text,
         style: AppTextStyles.buttonText(context).copyWith(
-          color: textColor ?? AppColors.secondary,
+          color: textColor ?? AppColors.primary,
           fontSize: fontSize ?? AppResponsive.scaleSize(context, 16),
           fontWeight: fontWeight ?? FontWeight.w600,
         ),

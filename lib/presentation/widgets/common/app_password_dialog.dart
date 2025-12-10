@@ -5,6 +5,7 @@ import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 import 'package:amorra/core/utils/app_texts/app_texts.dart';
+import 'package:amorra/core/utils/validators.dart';
 import 'app_large_button.dart';
 import 'app_text_field.dart';
 
@@ -52,10 +53,9 @@ class _AppPasswordDialogState extends State<AppPasswordDialog> {
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-    return null;
+    // For re-authentication, we only need to check if password is provided
+    // We don't validate format since it's the user's existing password
+    return Validators.validateRequired(value, 'Password');
   }
 
   void _handleConfirm() {

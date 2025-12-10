@@ -35,8 +35,8 @@ class MainNavigationScreen extends GetView<MainNavigationController> {
       bottomNavigationBar: Obx(
         () => FlashyTabBar(
           selectedIndex: controller.currentIndex.value,
-          showElevation: true,
-          iconSize: AppResponsive.iconSize(context,factor: 1.2),
+          showElevation: false,
+          iconSize: AppResponsive.iconSize(context, factor: 1.2),
           onItemSelected: (index) => controller.changeTab(index),
           items: [
             FlashyTabBarItem(

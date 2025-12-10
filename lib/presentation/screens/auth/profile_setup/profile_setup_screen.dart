@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:amorra/presentation/widgets/common/app_dots_indicator.dart';
-import 'package:amorra/presentation/widgets/common/app_large_button.dart';
-import 'package:amorra/presentation/widgets/common/app_text_field_error_message.dart';
 import 'package:amorra/presentation/widgets/auth/auth_main/auth_header.dart';
-import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_form_section.dart';
-import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_dropdown_field.dart';
-import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_topics_section.dart';
+import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_form_content.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
 import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/core/utils/app_texts/app_texts.dart';
@@ -34,9 +30,10 @@ class ProfileSetupScreen extends GetView<ProfileSetupController> {
         body: SafeArea(
           child: Column(
             children: [
-              // Step Indicator (Step 2 of 2) - Full width, equally split
+              // Step Indicator (Step 2 of 5) - Full width, equally split
+              // Combined steps: Age Verification (1), Profile Setup (2), Onboarding (3-5)
               AppDotsIndicator(
-                totalPages: 2,
+                totalPages: 5,
                 currentPage: 1,
                 // Step 2 (Profile Setup)
                 fullWidth: true,
@@ -59,132 +56,9 @@ class ProfileSetupScreen extends GetView<ProfileSetupController> {
               ),
 
               Expanded(
-                child: SingleChildScrollView(
-                  padding: AppSpacing.symmetric(
-                    context,
-                    h: 0.04,
-                    v: 0.02,
-                  ).copyWith(top: 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Conversation Tone
-                      Obx(
-                        () => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileSetupFormSection(
-                              label: AppTexts.conversationToneLabel,
-                              field: ProfileSetupDropdownField(
-                                value: controller.selectedTone.value.isEmpty
-                                    ? null
-                                    : controller.selectedTone.value,
-                                items: controller.toneOptions,
-                                onChanged: controller.updateTone,
-                                hint: AppTexts.conversationToneHint,
-                                errorText: controller.toneError.value,
-                              ),
-                            ),
-                            // Error message
-                            AppTextFieldErrorMessage(
-                              errorText: controller.toneError.value,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(context, 0.02),
-
-                      // Topics to Avoid
-                      Obx(
-                        () => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileSetupFormSection(
-                              label: AppTexts.topicsToAvoidLabel,
-                              hint: AppTexts.topicsToAvoidHint,
-                              field: const ProfileSetupTopicsSection(),
-                            ),
-                            // Error message
-                            AppTextFieldErrorMessage(
-                              errorText: controller.topicsToAvoidError.value,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(context, 0.02),
-
-                      // Support Type
-                      Obx(
-                        () => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileSetupFormSection(
-                              label: AppTexts.supportTypeLabel,
-                              field: ProfileSetupDropdownField(
-                                value:
-                                    controller.selectedSupportType.value.isEmpty
-                                    ? null
-                                    : controller.selectedSupportType.value,
-                                items: controller.supportTypeOptions,
-                                onChanged: controller.updateSupportType,
-                                hint: AppTexts.supportTypeHint,
-                                errorText: controller.supportTypeError.value,
-                              ),
-                            ),
-                            // Error message
-                            AppTextFieldErrorMessage(
-                              errorText: controller.supportTypeError.value,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(context, 0.02),
-
-                      // Relationship Status
-                      Obx(
-                        () => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProfileSetupFormSection(
-                              label: AppTexts.relationshipStatusLabel,
-                              field: ProfileSetupDropdownField(
-                                value:
-                                    controller
-                                        .selectedRelationshipStatus
-                                        .value
-                                        .isEmpty
-                                    ? null
-                                    : controller
-                                          .selectedRelationshipStatus
-                                          .value,
-                                items: controller.relationshipStatusOptions,
-                                onChanged: controller.updateRelationshipStatus,
-                                hint: AppTexts.relationshipStatusHint,
-                                errorText:
-                                    controller.relationshipStatusError.value,
-                              ),
-                            ),
-                            // Error message
-                            AppTextFieldErrorMessage(
-                              errorText:
-                                  controller.relationshipStatusError.value,
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppSpacing.vertical(context, 0.04),
-
-                      // Save Button
-                      Obx(
-                        () => AppLargeButton(
-                          text: AppTexts.profileSetupSaveButton,
-                          onPressed: controller.savePreferences,
-                          isLoading: controller.isLoading.value,
-                        ),
-                      ),
-                      AppSpacing.vertical(context, 0.02),
-                    ],
-                  ),
+                child: ProfileSetupFormContent(
+                  showSaveButton: true,
+                  onSave: controller.savePreferences,
                 ),
               ),
             ],

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:amorra/presentation/controllers/onboarding/onboarding_controller.dart';
+import 'package:amorra/presentation/controllers/auth/onboarding/onboarding_controller.dart';
 
 /// Onboarding Binding
 /// Dependency injection for onboarding screen

@@ -54,11 +54,22 @@ class SplashController extends BaseController {
             final isProfileSetupCompleted = await _authRepository.getProfileSetupStatus(currentUser.uid);
             
             if (isProfileSetupCompleted) {
-              // Profile setup completed, navigate to main
-              if (kDebugMode) {
-                print('✅ User age verified and profile setup completed, navigating to main');
+              // Profile setup completed, check onboarding status
+              final onboardingCompleted = _storage.read<bool>(AppConstants.storageKeyOnboardingCompleted) ?? false;
+              
+              if (onboardingCompleted) {
+                // Onboarding completed, navigate to main
+                if (kDebugMode) {
+                  print('✅ User age verified, profile setup and onboarding completed, navigating to main');
+                }
+                Get.offAllNamed(AppRoutes.mainNavigation);
+              } else {
+                // Onboarding not completed, navigate to onboarding
+                if (kDebugMode) {
+                  print('⚠️ User age verified and profile setup completed but onboarding not completed, navigating to onboarding');
+                }
+                Get.offAllNamed(AppRoutes.onboarding);
               }
-              Get.offAllNamed(AppRoutes.mainNavigation);
             } else {
               // Profile setup not completed, navigate to profile setup
               if (kDebugMode) {
@@ -74,34 +85,19 @@ class SplashController extends BaseController {
             Get.offAllNamed(AppRoutes.ageVerification);
           }
         } else {
-          // User not authenticated, check onboarding completion status
-          final onboardingCompleted = _storage.read<bool>(AppConstants.storageKeyOnboardingCompleted) ?? false;
-          
-          if (onboardingCompleted) {
-            // Onboarding already completed, navigate to signin
-            if (kDebugMode) {
-              print('📚 Onboarding completed, navigating to signin');
-            }
-            Get.offAllNamed(AppRoutes.signin);
-          } else {
-            // Onboarding not completed, navigate to onboarding
-            if (kDebugMode) {
-              print('👤 First time user, navigating to onboarding');
-            }
-            Get.offAllNamed(AppRoutes.onboarding);
+          // User not authenticated, navigate to signin
+          // Onboarding will be shown after profile setup
+          if (kDebugMode) {
+            print('👤 User not authenticated, navigating to signin');
           }
+          Get.offAllNamed(AppRoutes.signin);
         }
       } catch (e) {
         if (kDebugMode) {
           print('❌ Error checking auth/verification status: $e');
         }
-        // On error, check local storage for onboarding
-        final onboardingCompleted = _storage.read<bool>(AppConstants.storageKeyOnboardingCompleted) ?? false;
-        if (onboardingCompleted) {
-          Get.offAllNamed(AppRoutes.signin);
-        } else {
-          Get.offAllNamed(AppRoutes.onboarding);
-        }
+        // On error, navigate to signin (onboarding moved after profile setup)
+        Get.offAllNamed(AppRoutes.signin);
       }
     });
   }

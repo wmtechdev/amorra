@@ -7,10 +7,14 @@ import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 import 'package:amorra/core/utils/app_texts/app_texts.dart';
 import 'package:amorra/presentation/widgets/chat/chat_date_label.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:get/get.dart';
+import 'package:amorra/presentation/controllers/chat/chat_controller.dart';
+import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 
 /// Chat Header Widget
 /// Header with AI name and status
-class ChatHeader extends StatelessWidget {
+class ChatHeader extends GetView<ChatController> {
   const ChatHeader({super.key});
 
   @override
@@ -35,7 +39,9 @@ class ChatHeader extends StatelessWidget {
                   width: AppResponsive.iconSize(context, factor: 2),
                   height: AppResponsive.iconSize(context, factor: 2),
                   padding: AppSpacing.all(context, factor: 0.5),
-                  decoration: BoxDecoration(shape: BoxShape.circle).withAppGradient(),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ).withAppGradient(),
                   child: Image.asset(
                     AppImages.chatbotLogo,
                     height: AppResponsive.iconSize(context, factor: 0.8),
@@ -59,27 +65,55 @@ class ChatHeader extends StatelessWidget {
                           fontSize: AppResponsive.scaleSize(context, 18),
                         ),
                       ),
-                      Text(
-                        AppTexts.chatAIStatus,
-                        style: AppTextStyles.hintText(context).copyWith(
-                          color: AppColors.success,
-                          fontSize: AppResponsive.scaleSize(context, 12),
-                        ),
-                      ),
+                      Obx(() {
+                        // Listen to user changes to update status
+                        final authController = Get.find<AuthController>();
+                        final userName =
+                            authController.currentUser.value?.name ?? '';
+
+                        // Get first name
+                        String firstName = '';
+                        if (userName.isNotEmpty) {
+                          final nameParts = userName.trim().split(' ');
+                          firstName = nameParts.isNotEmpty ? nameParts[0] : '';
+                        }
+
+                        // Build status message
+                        final statusMessage = firstName.isNotEmpty
+                            ? '${AppTexts.chatAIStatusWithName} $firstName!'
+                            : AppTexts.chatAIStatus;
+
+                        return Text(
+                          statusMessage,
+                          style: AppTextStyles.hintText(context).copyWith(
+                            color: AppColors.success,
+                            fontSize: AppResponsive.scaleSize(context, 12),
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
+
+                // // Settings Icon
+                // IconButton(
+                //   icon: Icon(
+                //     Iconsax.setting_3,
+                //     color: AppColors.black,
+                //     size: AppResponsive.iconSize(context, factor: 1.2),
+                //   ),
+                //   onPressed: controller.showProfileSetupBottomSheet,
+                //   padding: EdgeInsets.zero,
+                //   constraints: const BoxConstraints(),
+                // ),
               ],
             ),
           ),
 
           // Date label on border
-          Center(
-            child: ChatDateLabel(date: DateTime.now()),
-          ),
+          Center(child: ChatDateLabel(date: DateTime.now())),
         ],
       ),
     );
   }
 }
-

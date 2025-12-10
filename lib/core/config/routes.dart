@@ -6,11 +6,11 @@ import 'package:amorra/presentation/screens/auth/auth_main/signin_screen.dart';
 import 'package:amorra/presentation/screens/auth/age_verification/age_verification_screen.dart';
 import 'package:amorra/presentation/screens/main/main_navigation_screen.dart';
 import 'package:amorra/presentation/screens/auth/profile_setup/profile_setup_screen.dart';
-import 'package:amorra/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:amorra/presentation/screens/auth/onboarding/onboarding_screen.dart';
 import 'package:amorra/presentation/bindings/auth_binding.dart';
 import 'package:amorra/presentation/bindings/splash_binding.dart';
 import 'package:amorra/presentation/bindings/main_binding.dart';
-import 'package:amorra/presentation/bindings/onboarding_binding.dart';
+import 'package:amorra/presentation/bindings/auth/onboarding_binding.dart';
 import 'package:amorra/presentation/bindings/age_verification_binding.dart';
 
 /// App Routes

@@ -74,6 +74,9 @@ dependencies:
   # Image Handling (if needed)
   cached_network_image: ^3.4.1
 
+  # Lottie Animations
+  lottie: ^3.1.2
+
   # Connectivity
   connectivity_plus: ^6.1.1
 
@@ -107,6 +110,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/lotties/
     - assets/images/
     - assets/images/logo/
     - assets/images/onboarding/

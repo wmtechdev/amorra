@@ -64,6 +64,7 @@ class HomeDailySuggestionCard extends StatelessWidget {
             child: AppTextButton(
               text: AppTexts.suggestionButtonText,
               onPressed: onTap,
+              textColor: AppColors.secondary,
               fontSize: AppResponsive.scaleSize(context, 12),
             ),
           ),

@@ -35,9 +35,10 @@ class AgeVerificationScreen extends GetView<AgeVerificationController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Step Indicator (Step 1 of 2) - Full width, equally split
+              // Step Indicator (Step 1 of 5) - Full width, equally split
+              // Combined steps: Age Verification (1), Profile Setup (2), Onboarding (3-5)
               AppDotsIndicator(
-                totalPages: 2,
+                totalPages: 5,
                 currentPage: 0,
                 // Step 1 (Age Verification)
                 fullWidth: true,

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/foundation.dart';
-import '../base_controller.dart';
+import '../../base_controller.dart';
 import 'package:amorra/core/config/routes.dart';
 import 'package:amorra/core/constants/app_constants.dart';
 import 'package:amorra/data/repositories/auth_repository.dart';
@@ -14,6 +14,7 @@ class OnboardingController extends BaseController {
   final PageController pageController = PageController();
   final RxInt currentPage = 0.obs;
   final int totalPages = 3;
+  final RxBool showCompletionAnimation = false.obs;
   final _storage = GetStorage();
   final AuthRepository _authRepository = AuthRepository();
   final FirebaseService _firebaseService = FirebaseService();
@@ -50,9 +51,12 @@ class OnboardingController extends BaseController {
     }
   }
 
-  /// Complete onboarding and navigate to sign in
+  /// Complete onboarding and navigate to main app
   Future<void> _completeOnboarding() async {
     try {
+      // Show completion animation
+      showCompletionAnimation.value = true;
+
       // Save onboarding completion to local storage
       await _storage.write(AppConstants.storageKeyOnboardingCompleted, true);
 
@@ -72,26 +76,29 @@ class OnboardingController extends BaseController {
         }
       }
 
+      // Wait for animation to complete (typically 2-3 seconds)
+      await Future.delayed(const Duration(seconds: 3));
+
       if (kDebugMode) {
-        print('✅ Onboarding completed, navigating to signin');
+        print('✅ Onboarding completed, navigating to main app');
       }
 
-      navigateToSignIn();
+      navigateToMainApp();
     } catch (e) {
       if (kDebugMode) {
         print('❌ Error completing onboarding: $e');
       }
       // Navigate anyway
-      navigateToSignIn();
+      navigateToMainApp();
     }
   }
 
-  /// Navigate to sign in screen
-  void navigateToSignIn() {
-    Get.offAllNamed(AppRoutes.signin);
+  /// Navigate to main app
+  void navigateToMainApp() {
+    Get.offAllNamed(AppRoutes.mainNavigation);
   }
 
-  /// Skip onboarding and go to sign in
+  /// Skip onboarding and go to main app
   void skipOnboarding() {
     _completeOnboarding();
   }

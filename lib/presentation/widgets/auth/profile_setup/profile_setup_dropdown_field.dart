@@ -61,7 +61,11 @@ class ProfileSetupDropdownField extends StatelessWidget {
           items: items.map((String item) {
             return DropdownMenuItem<String>(
               value: item,
-              child: Text(item),
+              child: Text(
+                item,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             );
           }).toList(),
           onChanged: onChanged,
@@ -71,6 +75,19 @@ class ProfileSetupDropdownField extends StatelessWidget {
             size: AppResponsive.iconSize(context),
           ),
           borderRadius: borderRadius,
+          isExpanded: true,
+          selectedItemBuilder: (BuildContext context) {
+            return items.map<Widget>((String item) {
+              return Text(
+                item,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: AppTextStyles.bodyText(context).copyWith(
+                  color: AppColors.black,
+                ),
+              );
+            }).toList();
+          },
         ),
       ),
     );

@@ -7,6 +7,10 @@ import 'package:amorra/presentation/controllers/base_controller.dart';
 import 'package:amorra/core/config/app_config.dart';
 import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 import 'package:amorra/data/services/chat_api_service.dart';
+import 'package:amorra/presentation/controllers/auth/profile_setup/profile_setup_controller.dart';
+import 'package:amorra/presentation/widgets/auth/profile_setup/profile_setup_bottom_sheet.dart';
+import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 
 /// Chat Controller
 /// Handles chat interface logic and state
@@ -177,6 +181,35 @@ class ChatController extends BaseController {
     // TODO: Replace with actual API call
     // This will call ChatApiService.moderateContent() when API is integrated
     return _chatApiService.moderateContent(content);
+  }
+
+  /// Show profile setup bottom sheet
+  void showProfileSetupBottomSheet() {
+    // Get or create ProfileSetupController
+    ProfileSetupController profileSetupController;
+    try {
+      profileSetupController = Get.find<ProfileSetupController>();
+      // Reload existing preferences
+      profileSetupController.loadExistingPreferences();
+    } catch (e) {
+      // Controller not found, create it
+      profileSetupController = Get.put(ProfileSetupController());
+    }
+
+    final context = Get.context;
+    if (context == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.lightBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppResponsive.radius(context, factor: 2)),
+        ),
+      ),
+      builder: (context) => const ProfileSetupBottomSheet(),
+    );
   }
 }
 

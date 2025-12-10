@@ -81,8 +81,8 @@ class Validators {
     }
     
     // Minimum length
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
     }
     
     // Maximum length
@@ -96,7 +96,7 @@ class Validators {
     }
     
     // Check for common weak passwords
-    final weakPasswords = ['password', '123456', '12345678', 'qwerty', 'abc123', 'password123'];
+    final weakPasswords = ['password', '123456', '12345678', 'qwerty', 'abc123', 'password123', 'password1', '123456789'];
     if (weakPasswords.contains(value.toLowerCase())) {
       return 'This password is too common. Please choose a stronger one';
     }
@@ -114,6 +114,26 @@ class Validators {
     // Check if password is all letters
     if (RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
       return 'For better security, add numbers or special characters';
+    }
+    
+    // Check for at least one uppercase letter
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    
+    // Check for at least one lowercase letter
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    
+    // Check for at least one number
+    if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return 'Password must contain at least one number';
+    }
+    
+    // Check for at least one special character
+    if (!RegExp(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>/?]').hasMatch(value)) {
+      return 'Password must contain at least one special character (!@#\$%^&*...)';
     }
     
     return null;

@@ -116,7 +116,7 @@ class AuthController extends BaseController {
       setLoading(true);
       await _authRepository.updateUser(user);
       currentUser.value = user;
-      showSuccess('Profile Updated', subtitle: 'Your profile has been updated successfully!');
+      // Success feedback is handled by the calling controller (e.g., Lottie animation)
     } catch (e) {
       setError(e.toString());
       final errorInfo = FirebaseErrorHandler.parseError(e);

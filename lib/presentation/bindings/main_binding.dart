@@ -5,6 +5,7 @@ import 'package:amorra/presentation/controllers/auth/auth_controller.dart';
 import 'package:amorra/presentation/controllers/subscription/subscription_controller.dart';
 import 'package:amorra/presentation/controllers/profile/profile_controller.dart';
 import 'package:amorra/presentation/controllers/chat/chat_controller.dart';
+import 'package:amorra/presentation/controllers/auth/profile_setup/profile_setup_controller.dart';
 import 'package:amorra/domain/services/chat_service.dart';
 import 'package:amorra/data/repositories/chat_repository.dart';
 
@@ -36,5 +37,8 @@ class MainBinding extends Bindings {
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => ChatController());
     Get.lazyPut(() => ProfileController());
+    
+    // Register ProfileSetupController for bottom sheet updates
+    Get.lazyPut(() => ProfileSetupController());
   }
 }
