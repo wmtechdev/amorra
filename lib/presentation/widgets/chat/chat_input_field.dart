@@ -13,6 +13,7 @@ class ChatInputField extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback? onSend;
   final bool isLimitReached;
+  final bool isReplying;
   final String? hintText;
   final FocusNode? focusNode;
 
@@ -21,6 +22,7 @@ class ChatInputField extends StatefulWidget {
     required this.controller,
     this.onSend,
     this.isLimitReached = false,
+    this.isReplying = false,
     this.hintText,
     this.focusNode,
   });
@@ -49,7 +51,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
   @override
   Widget build(BuildContext context) {
     final hasText = widget.controller.text.trim().isNotEmpty;
-    final canSend = hasText && !widget.isLimitReached && widget.onSend != null;
+    final canSend = hasText && !widget.isLimitReached && !widget.isReplying && widget.onSend != null;
 
     return Container(
       decoration: BoxDecoration(

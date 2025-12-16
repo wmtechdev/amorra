@@ -15,16 +15,23 @@ class ChatDailyLimitInfo extends StatelessWidget {
   final int remainingMessages;
   final bool isLimitReached;
   final bool isWithinFreeTrial;
+  final bool isSubscribed;
 
   const ChatDailyLimitInfo({
     super.key,
     required this.remainingMessages,
     required this.isLimitReached,
     this.isWithinFreeTrial = false,
+    this.isSubscribed = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Hide widget for subscribed users (they have unlimited messages)
+    if (isSubscribed) {
+      return const SizedBox.shrink();
+    }
+    
     if (isLimitReached) {
       return Container(
         padding: AppSpacing.symmetric(context, h: 0.04, v: 0.01),

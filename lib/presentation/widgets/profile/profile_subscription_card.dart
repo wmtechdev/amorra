@@ -124,14 +124,13 @@ class ProfileSubscriptionCard extends StatelessWidget {
             Text(
               AppTexts.subscriptionUnlimitedText,
               style: AppTextStyles.bodyText(context).copyWith(
-                color: AppColors.grey,
-                fontSize: AppResponsive.scaleSize(context, 14),
+                color: AppColors.black,
+                fontSize: AppResponsive.scaleSize(context, 12),
               ),
             ),
 
             // Next billing date (if available)
             if (nextBillingDate != null) ...[
-              AppSpacing.vertical(context, 0.008),
               Text(
                 AppTexts.subscriptionNextBilling.replaceAll(
                   '{date}',
@@ -144,7 +143,7 @@ class ProfileSubscriptionCard extends StatelessWidget {
               ),
             ],
 
-            AppSpacing.vertical(context, 0.015),
+            AppSpacing.vertical(context, 0.01),
 
             // Manage subscription button
             Align(

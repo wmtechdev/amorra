@@ -16,6 +16,7 @@ class SubscriptionPlanCard extends StatelessWidget {
   final bool isPremium;
   final bool isCurrentPlan;
   final VoidCallback? onSelect;
+  final VoidCallback? onCancel;
 
   const SubscriptionPlanCard({
     super.key,
@@ -27,6 +28,7 @@ class SubscriptionPlanCard extends StatelessWidget {
     this.isPremium = false,
     this.isCurrentPlan = false,
     this.onSelect,
+    this.onCancel,
   });
 
   @override
@@ -79,6 +81,7 @@ class SubscriptionPlanCard extends StatelessWidget {
             isCurrentPlan: isCurrentPlan,
             isPremium: isPremium,
             onSelect: onSelect,
+            onCancel: onCancel,
           ),
         ],
       ),

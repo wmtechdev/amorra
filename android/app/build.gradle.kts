@@ -69,3 +69,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // AppCompat is required for Stripe Payment Sheet
+    // Flutter usually includes this, but we add it explicitly to ensure compatibility
+    implementation("androidx.appcompat:appcompat:1.6.1")
+}

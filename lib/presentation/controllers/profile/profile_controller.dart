@@ -357,11 +357,20 @@ class ProfileController extends BaseController {
 
   /// Check if user is subscribed
   bool get isSubscribed {
-    return _subscriptionController?.isSubscribed.value ?? false;
+    // First check subscription controller, then fallback to user model
+    final subscriptionController = _subscriptionController;
+    if (subscriptionController != null && subscriptionController.isSubscribed.value) {
+      return true;
+    }
+    // Fallback to user model subscription status
+    return user.value?.isSubscribed ?? false;
   }
 
   /// Get remaining free messages
   int get remainingFreeMessages {
+    // Check subscription status first - subscribed users have unlimited
+    if (isSubscribed) return 999;
+    
     final currentUser = user.value;
     final isInTrial = currentUser != null && FreeTrialUtils.isWithinFreeTrial(currentUser);
     
@@ -374,6 +383,9 @@ class ProfileController extends BaseController {
 
   /// Get used messages (for progress indicator)
   int get usedMessages {
+    // Subscribed users have unlimited, so no usage tracking
+    if (isSubscribed) return 0;
+    
     final currentUser = user.value;
     final isInTrial = currentUser != null && FreeTrialUtils.isWithinFreeTrial(currentUser);
     
@@ -385,6 +397,9 @@ class ProfileController extends BaseController {
 
   /// Get daily limit
   int get dailyLimit {
+    // Subscribed users have unlimited
+    if (isSubscribed) return 999;
+    
     final currentUser = user.value;
     final isInTrial = currentUser != null && FreeTrialUtils.isWithinFreeTrial(currentUser);
     

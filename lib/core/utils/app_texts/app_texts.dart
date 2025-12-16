@@ -199,6 +199,7 @@ class AppTexts {
   static const String subscriptionCurrentPlan = "Current Plan";
   static const String subscriptionSelectPlan = "Select Plan";
   static const String subscriptionManageCurrentPlan = "Manage Plan";
+  static const String subscriptionCancelPlan = "Cancel Subscription";
   static const String subscriptionLoading = "Loading plans...";
 
   // Profile Setup Screen

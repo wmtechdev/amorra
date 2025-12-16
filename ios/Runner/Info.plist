@@ -45,8 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Stripe Configuration -->
+	<!-- Camera permission for card scanning feature -->
+	<key>NSCameraUsageDescription</key>
+	<string>Scan your card to add it automatically</string>
+	<!-- Stripe URL Scheme for 3D Secure and payment redirects -->
 	<key>CFBundleURLTypes</key>
 	<array>
+		<!-- Google Sign-In URL Scheme -->
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -55,6 +61,22 @@
 				<string>com.googleusercontent.apps.918972972138-5af0u61hiponfhpbsjblgluvkm6bv68d</string>
 			</array>
 		</dict>
+		<!-- Stripe URL Scheme (using bundle identifier) -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.example.amorra</string>
+			</array>
+		</dict>
 	</array>
+	<!-- Apple Pay Configuration (Optional - uncomment if using Apple Pay) -->
+	<!--
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.com.example.amorra</string>
+	</array>
+	-->
 </dict>
 </plist>

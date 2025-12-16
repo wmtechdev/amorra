@@ -87,6 +87,9 @@ class SubscriptionScreen extends GetView<SubscriptionController> {
                           : () => controller.purchaseSubscription(
                               'premium_monthly',
                             ),
+                      onCancel: controller.isSubscribed.value
+                          ? () => controller.cancelSubscription()
+                          : null,
                     ),
                   ],
                 ),

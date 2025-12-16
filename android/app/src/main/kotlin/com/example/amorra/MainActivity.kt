@@ -1,5 +1,14 @@
 package com.example.amorra
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+/**
+ * MainActivity for Amorra App
+ * 
+ * IMPORTANT: This extends FlutterFragmentActivity (not FlutterActivity)
+ * This is required for flutter_stripe package to work properly.
+ * 
+ * FlutterFragmentActivity is needed because Stripe Payment Sheet
+ * requires fragment-based activities on Android.
+ */
+class MainActivity : FlutterFragmentActivity()

@@ -40,8 +40,16 @@ class ChatController extends BaseController {
 
   // Computed
   bool get canSendMessage {
-    // If within free trial or subscribed, always allow
+    // Check subscription status first
+    final user = currentUser;
+    if (user != null && user.isSubscribed) {
+      return true; // Subscribed users have unlimited messages
+    }
+    
+    // If within free trial, always allow
     if (isWithinFreeTrial.value) return true;
+    
+    // After trial, check remaining messages
     return remainingMessages.value > 0;
   }
 
@@ -176,9 +184,12 @@ class ChatController extends BaseController {
   void handleUserChange(UserModel? user) {
     if (kDebugMode) {
       print('👤 User changed in ChatController: ${user?.name ?? 'null'} (ID: ${user?.id ?? 'null'})');
+      print('  - isSubscribed: ${user?.isSubscribed ?? false}');
     }
     
     _checkFreeTrialStatus();
+    _updateMessageLimitBasedOnSubscription(user);
+    
     if (userId != null && user != null) {
       // New user logged in - re-initialize everything
       if (kDebugMode) {
@@ -201,15 +212,44 @@ class ChatController extends BaseController {
     }
   }
 
+  /// Update message limit based on subscription status
+  void _updateMessageLimitBasedOnSubscription(UserModel? user) {
+    if (user == null) {
+      remainingMessages.value = AppConfig.freeMessageLimit;
+      return;
+    }
+
+    // Check subscription status first
+    if (user.isSubscribed) {
+      remainingMessages.value = 999; // Unlimited for subscribed users
+      if (kDebugMode) {
+        print('✅ User is subscribed - setting unlimited messages');
+      }
+      return;
+    }
+
+    // Check free trial status
+    if (FreeTrialUtils.isWithinFreeTrial(user)) {
+      remainingMessages.value = 999; // Unlimited for free trial
+      if (kDebugMode) {
+        print('✅ User is in free trial - setting unlimited messages');
+      }
+      return;
+    }
+
+    // Free tier - keep current limit or set default
+    if (remainingMessages.value >= 999) {
+      remainingMessages.value = AppConfig.freeMessageLimit;
+    }
+  }
+
   /// Check if user is within free trial period
   void _checkFreeTrialStatus() {
     final user = currentUser;
     if (user != null) {
       isWithinFreeTrial.value = FreeTrialUtils.isWithinFreeTrial(user);
-      // If within free trial, set unlimited messages
-      if (isWithinFreeTrial.value) {
-        remainingMessages.value = 999; // Unlimited indicator
-      }
+      // Update message limit based on subscription and trial status
+      _updateMessageLimitBasedOnSubscription(user);
     }
   }
 
@@ -432,7 +472,11 @@ class ChatController extends BaseController {
 
     // Check if user can send message
     final user = currentUser;
-    final hasUnlimited = user != null && FreeTrialUtils.hasUnlimitedMessages(user);
+    // Check subscription status first
+    final isSubscribed = user?.isSubscribed ?? false;
+    // Check free trial status
+    final isInTrial = user != null && FreeTrialUtils.isWithinFreeTrial(user);
+    final hasUnlimited = isSubscribed || isInTrial;
     
     if (!hasUnlimited && remainingMessages.value <= 0) {
       showError(
@@ -473,7 +517,10 @@ class ChatController extends BaseController {
 
       // Update remaining messages (only if not in free trial and not subscribed)
       final user = currentUser;
-      final hasUnlimited = user != null && FreeTrialUtils.hasUnlimitedMessages(user);
+      final isSubscribed = user?.isSubscribed ?? false;
+      final isInTrial = user != null && FreeTrialUtils.isWithinFreeTrial(user);
+      final hasUnlimited = isSubscribed || isInTrial;
+      
       if (!hasUnlimited) {
         remainingMessages.value = (remainingMessages.value - 1).clamp(0, 999);
       }
@@ -600,7 +647,11 @@ class ChatController extends BaseController {
     if (userId == null) return;
 
     final user = currentUser;
-    final hasUnlimited = user != null && FreeTrialUtils.hasUnlimitedMessages(user);
+    // Check subscription status first
+    final isSubscribed = user?.isSubscribed ?? false;
+    // Check free trial status
+    final isInTrial = user != null && FreeTrialUtils.isWithinFreeTrial(user);
+    final hasUnlimited = isSubscribed || isInTrial;
     
     // If user has unlimited (trial or subscribed), don't check limit
     if (hasUnlimited) {

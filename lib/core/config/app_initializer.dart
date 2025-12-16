@@ -1,5 +1,6 @@
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
 import 'package:amorra/presentation/controllers/theme/theme_controller.dart';
+import 'package:amorra/data/services/stripe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,9 @@ class AppInitializer {
 
     // Initialize Firebase
     await _initializeFirebase();
+
+    // Initialize Stripe (optional - can also be initialized on-demand)
+    await _initializeStripe();
 
     // Initialize GetX controllers
     _initializeControllers();
@@ -85,6 +89,62 @@ class AppInitializer {
         debugPrint('Firebase initialization error: $e');
         // Continue app initialization even if Firebase fails (for development)
       }
+    }
+  }
+
+  /// Initialize Stripe payment service (TEST MODE ONLY)
+  /// 
+  /// IMPORTANT: This app is configured for TEST MODE only.
+  /// Use Stripe TEST publishable keys (starting with 'pk_test_')
+  /// from Stripe Dashboard > Developers > API keys > Test mode
+  /// 
+  /// iOS Configuration:
+  /// - URL scheme configured in Info.plist: com.example.amorra
+  /// - Camera permission for card scanning: NSCameraUsageDescription
+  /// - Apple Pay merchant identifier (optional): Set STRIPE_MERCHANT_IDENTIFIER in .env
+  /// 
+  /// This is optional - Stripe can also be initialized on-demand when needed
+  static Future<void> _initializeStripe() async {
+    try {
+      // Get Stripe publishable key from environment
+      final publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'];
+      
+      if (publishableKey != null && publishableKey.isNotEmpty) {
+        // Validate test mode key
+        if (!publishableKey.startsWith('pk_test_')) {
+          if (kDebugMode) {
+            debugPrint('⚠️ WARNING: Stripe key does not start with "pk_test_"');
+            debugPrint('  This app is configured for TEST MODE only.');
+            debugPrint('  Please use a Stripe TEST publishable key.');
+          }
+        }
+        
+        // Get merchant identifier for iOS Apple Pay (optional)
+        final merchantIdentifier = dotenv.env['STRIPE_MERCHANT_IDENTIFIER'];
+        
+        final stripeService = StripeService();
+        await stripeService.initialize(
+          publishableKey,
+          merchantIdentifier: merchantIdentifier,
+        );
+        if (kDebugMode) {
+          debugPrint('✅ Stripe initialized successfully (TEST MODE)');
+          if (merchantIdentifier != null) {
+            debugPrint('  - Apple Pay: Enabled (Merchant ID: $merchantIdentifier)');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          debugPrint('ℹ️ Stripe publishable key not found - will initialize on-demand');
+          debugPrint('  Stripe will be initialized when user attempts to purchase');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Stripe initialization error: $e');
+        debugPrint('  Stripe will be initialized on-demand when needed');
+      }
+      // Continue app initialization - Stripe can be initialized later
     }
   }
 
