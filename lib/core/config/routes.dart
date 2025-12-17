@@ -7,11 +7,14 @@ import 'package:amorra/presentation/screens/auth/age_verification/age_verificati
 import 'package:amorra/presentation/screens/main/main_navigation/main_navigation_screen.dart';
 import 'package:amorra/presentation/screens/auth/profile_setup/profile_setup_screen.dart';
 import 'package:amorra/presentation/screens/auth/onboarding/onboarding_screen.dart';
+import 'package:amorra/presentation/screens/admin/admin_login_screen.dart';
+import 'package:amorra/presentation/screens/admin/admin_dashboard_screen.dart';
 import 'package:amorra/presentation/bindings/auth_binding.dart';
 import 'package:amorra/presentation/bindings/splash_binding.dart';
 import 'package:amorra/presentation/bindings/main_binding.dart';
 import 'package:amorra/presentation/bindings/auth/onboarding_binding.dart';
 import 'package:amorra/presentation/bindings/age_verification_binding.dart';
+import 'package:amorra/presentation/bindings/admin_binding.dart';
 
 /// App Routes
 /// Centralized route definitions for GetX navigation
@@ -31,6 +34,7 @@ class AppRoutes {
   static const String payment = '/payment';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String adminLogin = '/admin-login';
   static const String adminDashboard = '/admin-dashboard';
 
   /// Get all routes
@@ -81,6 +85,18 @@ class AppRoutes {
         name: mainNavigation,
         page: () => const MainNavigationScreen(),
         binding: MainBinding(),
+        preventDuplicates: true,
+      ),
+      GetPage(
+        name: adminLogin,
+        page: () => const AdminLoginScreen(),
+        binding: AdminBinding(),
+        preventDuplicates: true,
+      ),
+      GetPage(
+        name: adminDashboard,
+        page: () => const AdminDashboardScreen(),
+        binding: AdminBinding(),
         preventDuplicates: true,
       ),
     ];

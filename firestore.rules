@@ -7,9 +7,21 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // Helper function to check if user is admin
+    // Checks both custom claims and Firestore admin collection
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
     match /users/{userId} {
 
-      // Authentication
+      // Admin access - full read/write
+      allow read, write: if isAdmin();
+
+      // Regular user access
       allow get: if isAuthenticated() && request.auth.uid == userId;
       allow list: if isAuthenticated();
       allow create: if isAuthenticated()
@@ -27,6 +39,9 @@ service cloud.firestore {
     }
 
     match /messages/{messageId} {
+      // Admin can read all messages
+      allow read: if isAdmin();
+      // Regular users can read/write
       allow read, write: if isAuthenticated();
     }
     
@@ -50,6 +65,10 @@ service cloud.firestore {
 
     // Subscriptions
     match /subscriptions/{subscriptionId} {
+      // Admin access - full read/write
+      allow read, write: if isAdmin();
+      
+      // Regular user access
       allow read, write: if isAuthenticated()
         && (resource.data.userId == request.auth.uid
             || request.resource.data.userId == request.auth.uid);
@@ -65,7 +84,15 @@ service cloud.firestore {
     // Daily suggestions
     match /daily_suggestions/{suggestionId} {
       allow read: if isAuthenticated();
-      allow write: if false; // Only admins can write (handled server-side or via admin dashboard)
+      allow write: if isAdmin(); // Admins can write
+    }
+
+    // Admin collection
+    match /admins/{adminId} {
+      // Only admins can read admin collection
+      allow read: if isAdmin();
+      // Only admins can write (for creating new admins)
+      allow write: if isAdmin();
     }
 
     // Deny everything else
