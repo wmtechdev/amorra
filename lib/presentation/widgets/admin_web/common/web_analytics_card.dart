@@ -29,13 +29,10 @@ class WebAnalyticsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           WebResponsive.radius(context, factor: 1.0),
         ),
-        border: Border.all(
-          color: AppColors.lightGrey,
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha:0.5)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: color.withValues(alpha:0.2),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -47,30 +44,19 @@ class WebAnalyticsCard extends StatelessWidget {
           Row(
             children: [
               if (icon != null) ...[
-                Container(
-                  padding: EdgeInsets.all(
-                    WebResponsive.isDesktop(context) ? 10 : 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(
-                      WebResponsive.radius(context, factor: 0.5),
-                    ),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: color,
-                    size: WebResponsive.iconSize(context, factor: 0.8),
-                  ),
+                Icon(
+                  icon,
+                  color: color,
+                  size: WebResponsive.iconSize(context, factor: 0.8),
                 ),
-                WebSpacing.horizontalSpacing(context, 0.75),
+                WebSpacing.horizontalSpacing(context, 0.5),
               ],
               Expanded(
                 child: Text(
                   label,
-                  style: WebTextStyles.label(context).copyWith(
-                    color: AppColors.grey,
-                  ),
+                  style: WebTextStyles.label(
+                    context,
+                  ).copyWith(color: AppColors.black),
                 ),
               ),
             ],
@@ -88,4 +74,3 @@ class WebAnalyticsCard extends StatelessWidget {
     );
   }
 }
-

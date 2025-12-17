@@ -17,132 +17,142 @@ class UserTable extends StatelessWidget {
   final List<UserModel> users;
   final Function(UserModel) onViewDetails;
   final Function(UserModel) onBlockUnblock;
-  final Function(UserModel) onGrantTrial;
-  final Function(UserModel) onDelete;
 
   const UserTable({
     super.key,
     required this.users,
     required this.onViewDetails,
     required this.onBlockUnblock,
-    required this.onGrantTrial,
-    required this.onDelete,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return WebCard(
-      padding: EdgeInsets.zero,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: WebDataTable(
-          columns: [
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderName,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderEmail,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderStatus,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderCreated,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderActions,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-          ],
-          rows: users.map((user) {
-            return DataRow(
-              cells: [
-                DataCell(
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: WebResponsive.isDesktop(context) ? 20 : 16,
-                        backgroundColor: AppColors.primary,
-                        child: Text(
-                          user.name.isNotEmpty
-                              ? user.name[0].toUpperCase()
-                              : 'U',
-                          style: WebTextStyles.bodyText(context).copyWith(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      WebSpacing.horizontalSpacing(context, 0.75),
-                      Expanded(
-                        child: Text(
-                          user.name,
-                          style: WebTextStyles.tableCell(context).copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+  List<DataColumn> _buildColumns(BuildContext context) {
+    return [
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderName,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderEmail,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderStatus,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderCreated,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderActions,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+    ];
+  }
+
+  List<DataRow> _buildRows(BuildContext context) {
+    return users.map((user) {
+      return DataRow(
+        cells: [
+          DataCell(
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: WebResponsive.isDesktop(context) ? 20 : 16,
+                  backgroundColor: AppColors.primary,
+                  child: Text(
+                    user.name.isNotEmpty
+                        ? user.name[0].toUpperCase()
+                        : 'U',
+                    style: WebTextStyles.bodyText(context).copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                DataCell(
-                  Text(
-                    user.email ?? '-',
-                    style: WebTextStyles.tableCell(context),
+                WebSpacing.horizontalSpacing(context, 0.75),
+                Expanded(
+                  child: Text(
+                    user.name,
+                    style: WebTextStyles.tableCell(context).copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                DataCell(
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      WebBadge(
-                        text: user.subscriptionStatus,
-                        color: _getStatusColor(user.subscriptionStatus),
-                      ),
-                      if (user.isBlocked)
-                        WebBadge(
-                          text: WebTexts.statusBlocked,
-                          color: AppColors.error,
-                        ),
-                    ],
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    _formatDate(user.createdAt),
-                    style: WebTextStyles.tableCell(context),
-                  ),
-                ),
-                DataCell(
-                  UserActionsMenu(
-                    user: user,
-                    onViewDetails: () => onViewDetails(user),
-                    onBlockUnblock: () => onBlockUnblock(user),
-                    onGrantTrial: () => onGrantTrial(user),
-                    onDelete: () => onDelete(user),
-                  ),
-                ),
               ],
-            );
-          }).toList(),
-        ),
-      ),
+            ),
+          ),
+          DataCell(
+            Text(
+              user.email ?? '-',
+              style: WebTextStyles.tableCell(context),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          DataCell(
+            Wrap(
+              spacing: 8,
+              children: [
+                WebBadge(
+                  text: user.subscriptionStatus,
+                  color: _getStatusColor(user.subscriptionStatus),
+                ),
+                if (user.isBlocked)
+                  WebBadge(
+                    text: WebTexts.statusBlocked,
+                    color: AppColors.error,
+                  ),
+              ],
+            ),
+          ),
+          DataCell(
+            Text(
+              _formatDate(user.createdAt),
+              style: WebTextStyles.tableCell(context),
+            ),
+          ),
+          DataCell(
+            UserActionsMenu(
+              user: user,
+              onViewDetails: () => onViewDetails(user),
+              onBlockUnblock: () => onBlockUnblock(user),
+            ),
+          ),
+        ],
+      );
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final columns = _buildColumns(context);
+    final rows = _buildRows(context);
+
+    return WebCard(
+      padding: EdgeInsets.zero,
+      child: WebResponsive.isDesktop(context)
+          ? WebDataTable(
+              columns: columns,
+              rows: rows,
+            )
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: WebDataTable(
+                columns: columns,
+                rows: rows,
+              ),
+            ),
     );
   }
 

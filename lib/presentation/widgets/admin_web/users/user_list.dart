@@ -16,16 +16,12 @@ class UserList extends StatelessWidget {
   final List<UserModel> users;
   final Function(UserModel) onViewDetails;
   final Function(UserModel) onBlockUnblock;
-  final Function(UserModel) onGrantTrial;
-  final Function(UserModel) onDelete;
 
   const UserList({
     super.key,
     required this.users,
     required this.onViewDetails,
     required this.onBlockUnblock,
-    required this.onGrantTrial,
-    required this.onDelete,
   });
 
   @override
@@ -80,8 +76,6 @@ class UserList extends StatelessWidget {
                     user: user,
                     onViewDetails: () => onViewDetails(user),
                     onBlockUnblock: () => onBlockUnblock(user),
-                    onGrantTrial: () => onGrantTrial(user),
-                    onDelete: () => onDelete(user),
                   ),
                 ],
               ),

@@ -4,16 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:amorra/data/models/subscription_model.dart';
 import 'package:amorra/data/services/admin_service.dart';
 import 'package:amorra/core/constants/app_constants.dart';
-import 'package:amorra/presentation/controllers/base_controller.dart';
+import 'package:amorra/presentation/controllers/admin/admin_base_controller.dart';
 
 /// Admin Subscription Controller
 /// Handles subscription management operations for admin dashboard
-class AdminSubscriptionController extends BaseController {
+class AdminSubscriptionController extends AdminBaseController {
   final AdminService _adminService = AdminService();
 
   // State
   final RxList<SubscriptionModel> subscriptions = <SubscriptionModel>[].obs;
-  final Rx<SubscriptionModel?> selectedSubscription = Rx<SubscriptionModel?>(null);
   final RxString searchQuery = ''.obs;
   final RxString selectedFilter = 'all'.obs; // all, active, cancelled, expired
 
@@ -21,13 +20,14 @@ class AdminSubscriptionController extends BaseController {
   final RxString filterStatus = 'all'.obs;
   final RxString filterPlanName = 'all'.obs;
 
-  // Pagination
-  final RxInt currentPage = 0.obs;
-  final RxInt itemsPerPage = 25.obs;
+  // Total count
   final RxInt totalSubscriptions = 0.obs;
 
   // Analytics
   final RxMap<String, dynamic> subscriptionAnalytics = <String, dynamic>{}.obs;
+
+  // User emails map (userId -> email)
+  final RxMap<String, String> userEmails = <String, String>{}.obs;
 
   // Stream subscription
   StreamSubscription<List<SubscriptionModel>>? _subscriptionsStreamSubscription;
@@ -99,6 +99,10 @@ class AdminSubscriptionController extends BaseController {
               }
 
               totalSubscriptions.value = subscriptions.length;
+              
+              // Load user emails for subscriptions
+              _loadUserEmails(subscriptionList);
+              
               setLoading(false);
             },
             onError: (error) {
@@ -128,16 +132,6 @@ class AdminSubscriptionController extends BaseController {
             (sub.stripeCustomerId?.toLowerCase().contains(query) ?? false);
       }).toList();
     }
-  }
-
-  /// Select subscription
-  void selectSubscription(SubscriptionModel subscription) {
-    selectedSubscription.value = subscription;
-  }
-
-  /// Clear selected subscription
-  void clearSelectedSubscription() {
-    selectedSubscription.value = null;
   }
 
   /// Update subscription
@@ -214,40 +208,51 @@ class AdminSubscriptionController extends BaseController {
     loadSubscriptions();
   }
 
-  /// Clear filters
-  void clearFilters() {
-    filterStatus.value = 'all';
-    filterPlanName.value = 'all';
-    searchQuery.value = '';
-    selectedFilter.value = 'all';
-    loadSubscriptions();
-  }
+  /// Load user emails for subscriptions
+  Future<void> _loadUserEmails(List<SubscriptionModel> subscriptionList) async {
+    try {
+      // Get unique user IDs
+      final uniqueUserIds = subscriptionList
+          .map((sub) => sub.userId)
+          .where((userId) => userId.isNotEmpty)
+          .toSet()
+          .toList();
 
-  /// Get paginated subscriptions
-  List<SubscriptionModel> get paginatedSubscriptions {
-    final start = currentPage.value * itemsPerPage.value;
-    final end = (start + itemsPerPage.value).clamp(0, subscriptions.length);
-    return subscriptions.sublist(start.clamp(0, subscriptions.length), end);
-  }
+      // Filter out users we already have emails for
+      final userIdsToFetch = uniqueUserIds
+          .where((userId) => !userEmails.containsKey(userId))
+          .toList();
 
-  /// Go to next page
-  void nextPage() {
-    if ((currentPage.value + 1) * itemsPerPage.value < subscriptions.length) {
-      currentPage.value++;
+      if (userIdsToFetch.isEmpty) return;
+
+      // Batch fetch user emails
+      for (final userId in userIdsToFetch) {
+        try {
+          final user = await _adminService.getUserById(userId);
+          if (user != null && user.email != null) {
+            userEmails[userId] = user.email!;
+          } else {
+            // Fallback to userId if email not found
+            userEmails[userId] = userId;
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('Error fetching user email for $userId: $e');
+          }
+          // Fallback to userId on error
+          userEmails[userId] = userId;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading user emails: $e');
+      }
     }
   }
 
-  /// Go to previous page
-  void previousPage() {
-    if (currentPage.value > 0) {
-      currentPage.value--;
-    }
-  }
-
-  /// Set items per page
-  void setItemsPerPage(int items) {
-    itemsPerPage.value = items;
-    currentPage.value = 0; // Reset to first page
+  /// Get user email by userId
+  String getUserEmail(String userId) {
+    return userEmails[userId] ?? userId;
   }
 
   /// Get status badge color

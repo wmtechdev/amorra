@@ -1,6 +1,9 @@
+import 'package:amorra/presentation/screens/main/not_found/not_found_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:amorra/presentation/controllers/admin/admin_auth_controller.dart';
+import 'package:amorra/presentation/controllers/admin/admin_dashboard_controller.dart';
 import 'package:amorra/presentation/screens/admin/users/admin_users_screen.dart';
 import 'package:amorra/presentation/screens/admin/subscriptions/admin_subscriptions_screen.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_sidebar.dart';
@@ -9,6 +12,8 @@ import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
 import 'package:amorra/core/utils/web/web_texts/web_texts.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_gradient/app_gradient.dart';
+import 'package:amorra/core/config/routes.dart';
 
 /// Admin Dashboard Screen
 /// Main screen with navigation between User Management and Subscription Management
@@ -17,7 +22,8 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
 
   @override
   Widget build(BuildContext context) {
-    final RxInt selectedIndex = 0.obs;
+    // Initialize dashboard controller
+    final dashboardController = Get.put(AdminDashboardController());
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -30,13 +36,15 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
             color: AppColors.white,
           ),
         ),
-        backgroundColor: AppColors.primary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration().withAppGradient(),
+        ),
         foregroundColor: AppColors.white,
         elevation: 0,
         leading: WebResponsive.isMobile(context)
             ? IconButton(
                 icon: Icon(
-                  Icons.menu,
+                  Iconsax.menu_1,
                   size: WebResponsive.iconSize(context, factor: 0.9),
                 ),
                 onPressed: () => scaffoldKey.currentState?.openDrawer(),
@@ -49,7 +57,7 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
             ),
             child: IconButton(
               icon: Icon(
-                Icons.logout,
+                Iconsax.logout,
                 size: WebResponsive.iconSize(context, factor: 0.9),
               ),
               tooltip: WebTexts.adminSignOut,
@@ -61,25 +69,26 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
       drawer: WebResponsive.isMobile(context)
           ? Drawer(
               width: WebResponsive.sidebarWidth(context),
-              child: WebSidebar(
-                selectedIndex: selectedIndex.value,
-                onItemSelected: (index) {
-                  selectedIndex.value = index;
-                  scaffoldKey.currentState?.closeDrawer();
-                },
-                currentUserEmail: controller.currentAdminEmail,
-              ),
+              child: Obx(() => WebSidebar(
+                    selectedIndex: dashboardController.selectedIndex.value,
+                    onItemSelected: (index) {
+                      dashboardController.setSelectedIndex(index);
+                      scaffoldKey.currentState?.closeDrawer();
+                    },
+                    currentUserEmail: controller.currentAdminEmail,
+                  )),
             )
           : null,
       body: Row(
         children: [
           // Sidebar Navigation (Desktop only)
           if (WebResponsive.isDesktop(context))
-            WebSidebar(
-              selectedIndex: selectedIndex.value,
-              onItemSelected: (index) => selectedIndex.value = index,
-              currentUserEmail: controller.currentAdminEmail,
-            ),
+            Obx(() => WebSidebar(
+                  selectedIndex: dashboardController.selectedIndex.value,
+                  onItemSelected: (index) =>
+                      dashboardController.setSelectedIndex(index),
+                  currentUserEmail: controller.currentAdminEmail,
+                )),
 
           // Main Content Area
           Expanded(
@@ -89,10 +98,10 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
               ),
               margin: WebSpacing.all(context, factor: 1.0),
               child: Obx(() {
-                if (selectedIndex.value == 0) {
+                if (dashboardController.selectedIndex.value == 0) {
                   return const AdminUsersScreen();
                 } else {
-                  return const AdminSubscriptionsScreen();
+                  return const NotFoundScreen();
                 }
               }),
             ),
@@ -103,6 +112,7 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
   }
 
   void _handleSignOut(AdminAuthController controller) {
+    // return const AdminSubscriptionsScreen();
     Get.dialog(
       AlertDialog(
         title: Text(
@@ -122,7 +132,7 @@ class AdminDashboardScreen extends GetView<AdminAuthController> {
             onPressed: () {
               Get.back();
               controller.signOut();
-              Get.offAllNamed('/admin-login');
+              Get.offAllNamed(AppRoutes.adminLogin);
             },
             child: Text(
               WebTexts.adminSignOut,

@@ -9,6 +9,8 @@ import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
 import 'package:amorra/core/utils/web/web_texts/web_texts.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
+import 'package:amorra/core/utils/app_images/app_images.dart';
+import 'package:amorra/core/config/routes.dart';
 
 /// Admin Login Screen
 /// Desktop-optimized login screen for admin dashboard
@@ -22,6 +24,15 @@ class AdminLoginScreen extends GetView<AdminAuthController> {
       Get.put(AdminAuthController());
     }
 
+    // Check if already authenticated and redirect
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.isAuthenticated.value && controller.isAdmin.value) {
+        if (Get.currentRoute != AppRoutes.adminDashboard) {
+          Get.offAllNamed(AppRoutes.adminDashboard);
+        }
+      }
+    });
+
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
@@ -33,7 +44,9 @@ class AdminLoginScreen extends GetView<AdminAuthController> {
             padding: WebSpacing.all(context, factor: 1.0),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: WebResponsive.isDesktop(context) ? 480 : double.infinity,
+                maxWidth: WebResponsive.isDesktop(context)
+                    ? 480
+                    : double.infinity,
               ),
               child: WebCard(
                 padding: WebSpacing.all(context, factor: 2.0),
@@ -44,32 +57,26 @@ class AdminLoginScreen extends GetView<AdminAuthController> {
                     // Logo/Title Section
                     Column(
                       children: [
-                        Container(
-                          padding: WebSpacing.all(context, factor: 1.0),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.admin_panel_settings,
-                            size: WebResponsive.iconSize(context, factor: 2.0),
-                            color: AppColors.primary,
-                          ),
+                        Image.asset(
+                          AppImages.splashLogo,
+                          width: WebResponsive.iconSize(context, factor: 4.0),
+                          height: WebResponsive.iconSize(context, factor: 4.0),
+                          fit: BoxFit.contain,
                         ),
                         WebSpacing.large(context),
                         Text(
                           WebTexts.adminLoginTitle,
                           style: WebTextStyles.largeHeading(context).copyWith(
-                            color: AppColors.primary,
+                            color: AppColors.primary
                           ),
                           textAlign: TextAlign.center,
                         ),
                         WebSpacing.medium(context),
                         Text(
                           WebTexts.adminLoginSubtitle,
-                          style: WebTextStyles.bodyText(context).copyWith(
-                            color: AppColors.grey,
-                          ),
+                          style: WebTextStyles.bodyText(
+                            context,
+                          ).copyWith(color: AppColors.grey),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -107,10 +114,10 @@ class AdminLoginScreen extends GetView<AdminAuthController> {
                         onPressed: isLoading
                             ? null
                             : () => _handleSignIn(
-                                  controller,
-                                  emailController.text,
-                                  passwordController.text,
-                                ),
+                                controller,
+                                emailController.text,
+                                passwordController.text,
+                              ),
                         isLoading: isLoading,
                       );
                     }),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:amorra/core/utils/web/web_responsive/web_responsive.dart';
 import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
@@ -35,38 +36,6 @@ class WebSidebar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Logo/Header
-          Container(
-            padding: WebSpacing.all(context, factor: 1.0),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              border: Border(
-                bottom: BorderSide(
-                  color: AppColors.lightGrey,
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.admin_panel_settings,
-                  color: AppColors.primary,
-                  size: WebResponsive.iconSize(context, factor: 1.2),
-                ),
-                WebSpacing.horizontalSpacing(context, 0.5),
-                Expanded(
-                  child: Text(
-                    WebTexts.adminDashboard,
-                    style: WebTextStyles.heading(context).copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           // Navigation Items
           Expanded(
             child: ListView(
@@ -76,14 +45,14 @@ class WebSidebar extends StatelessWidget {
               children: [
                 _buildNavItem(
                   context,
-                  icon: Icons.people,
+                  icon: Iconsax.profile_2user,
                   label: WebTexts.navUsers,
                   index: 0,
                 ),
                 WebSpacing.small(context),
                 _buildNavItem(
                   context,
-                  icon: Icons.subscriptions,
+                  icon: Iconsax.card_send,
                   label: WebTexts.navSubscriptions,
                   index: 1,
                 ),
@@ -97,10 +66,7 @@ class WebSidebar extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.lightGrey.withOpacity(0.3),
               border: Border(
-                top: BorderSide(
-                  color: AppColors.lightGrey,
-                  width: 1,
-                ),
+                top: BorderSide(color: AppColors.lightGrey, width: 1),
               ),
             ),
             child: Column(
@@ -109,7 +75,7 @@ class WebSidebar extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.account_circle,
+                      Iconsax.profile_circle,
                       size: WebResponsive.iconSize(context, factor: 0.8),
                       color: AppColors.grey,
                     ),
@@ -141,29 +107,32 @@ class WebSidebar extends StatelessWidget {
 
     return InkWell(
       onTap: () => onItemSelected(index),
-      hoverColor: AppColors.primary.withOpacity(0.1),
+      hoverColor: AppColors.secondary.withOpacity(0.1),
       child: Container(
         margin: WebSpacing.symmetric(context, h: 0.5, v: 0.25),
-        padding: WebSpacing.symmetric(context, h: 0.75, v: 0.75),
+        padding: WebSpacing.symmetric(context, h: 0.75, v: 0.5),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary.withOpacity(0.15)
-              : Colors.transparent,
+          gradient: isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, AppColors.secondary],
+                )
+              : null,
+          color: isSelected ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(
             WebResponsive.radius(context, factor: 0.75),
           ),
-          border: isSelected
-              ? Border.all(
-                  color: AppColors.primary.withOpacity(0.3),
-                  width: 1,
-                )
-              : null,
+          border: Border.all(
+            color: AppColors.lightGrey,
+            width: 1,
+          ),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.primary : AppColors.grey,
+              color: isSelected ? AppColors.white : AppColors.grey,
               size: WebResponsive.iconSize(context, factor: 0.9),
             ),
             WebSpacing.horizontalSpacing(context, 0.75),
@@ -171,21 +140,14 @@ class WebSidebar extends StatelessWidget {
               child: Text(
                 label,
                 style: WebTextStyles.bodyText(context).copyWith(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  color: isSelected ? AppColors.primary : AppColors.black,
+                  fontWeight:FontWeight.normal,
+                  color: isSelected ? AppColors.white : AppColors.black,
                 ),
               ),
             ),
-            if (isSelected)
-              Icon(
-                Icons.chevron_right,
-                color: AppColors.primary,
-                size: WebResponsive.iconSize(context, factor: 0.7),
-              ),
           ],
         ),
       ),
     );
   }
 }
-

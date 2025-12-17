@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_search_bar.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_card.dart';
-import 'package:amorra/presentation/widgets/admin_web/common/filter_chips_row.dart';
 import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
 
@@ -12,7 +11,7 @@ class PageHeader extends StatelessWidget {
   final String searchHint;
   final TextEditingController? searchController;
   final ValueChanged<String>? onSearchChanged;
-  final FilterChipsRow? filterChips;
+  final Widget? filterChips;
 
   const PageHeader({
     super.key,
@@ -32,7 +31,7 @@ class PageHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: WebTextStyles.largeHeading(context),
+            style: WebTextStyles.heading(context),
           ),
           WebSpacing.medium(context),
           // Search Bar

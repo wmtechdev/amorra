@@ -1,3 +1,4 @@
+import 'package:amorra/core/utils/app_gradient/app_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:amorra/core/utils/web/web_responsive/web_responsive.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
@@ -27,27 +28,26 @@ class WebFilterChip extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: WebResponsive.isDesktop(context) ? 16 : 12,
-          vertical: WebResponsive.isDesktop(context) ? 8 : 6,
+          vertical: WebResponsive.isDesktop(context) ? 6 : 4,
         ),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary
-              : AppColors.lightGrey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(
-            WebResponsive.radius(context, factor: 2.0),
-          ),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : AppColors.lightGrey,
-            width: 1,
-          ),
-        ),
+        decoration: isSelected
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  WebResponsive.radius(context, factor: 2.0),
+                ),
+              ).withAppGradient()
+            : BoxDecoration(
+                color: AppColors.lightGrey,
+                borderRadius: BorderRadius.circular(
+                  WebResponsive.radius(context, factor: 2.0),
+                ),
+                border: Border.all(color: AppColors.lightGrey, width: 1),
+              ),
         child: Text(
           label,
           style: WebTextStyles.bodyText(context).copyWith(
             color: isSelected ? AppColors.white : AppColors.black,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontWeight: FontWeight.normal,
             fontSize: WebResponsive.fontSize(context, factor: 0.875),
           ),
         ),
@@ -55,4 +55,3 @@ class WebFilterChip extends StatelessWidget {
     );
   }
 }
-

@@ -32,6 +32,7 @@ class WebDataTable<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(
@@ -62,6 +63,7 @@ class WebDataTable<T> extends StatelessWidget {
               (WebResponsive.isDesktop(context) ? 56 : 48),
           dataRowHeight: dataRowHeight ??
               (WebResponsive.isDesktop(context) ? 64 : 56),
+          columnSpacing: WebResponsive.isDesktop(context) ? 56 : 24,
           headingRowColor: WidgetStateProperty.all(
             AppColors.lightGrey.withOpacity(0.3),
           ),

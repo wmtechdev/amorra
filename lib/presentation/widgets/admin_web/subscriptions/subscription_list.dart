@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:amorra/data/models/subscription_model.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_badge.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_card.dart';
@@ -15,6 +16,7 @@ class SubscriptionList extends StatelessWidget {
   final Function(SubscriptionModel) onViewDetails;
   final Function(SubscriptionModel) onCancel;
   final Function(SubscriptionModel) onReactivate;
+  final Map<String, String> userEmails;
 
   const SubscriptionList({
     super.key,
@@ -22,6 +24,7 @@ class SubscriptionList extends StatelessWidget {
     required this.onViewDetails,
     required this.onCancel,
     required this.onReactivate,
+    required this.userEmails,
   });
 
   @override
@@ -34,6 +37,7 @@ class SubscriptionList extends StatelessWidget {
         return WebCard(
           margin: EdgeInsets.only(bottom: WebSpacing.medium(context).height!),
           padding: WebSpacing.all(context, factor: 1.0),
+          borderColor: _getStatusColor(subscription.status),
           onTap: () => onViewDetails(subscription),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +45,7 @@ class SubscriptionList extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.subscriptions,
+                    Iconsax.card_send,
                     color: _getStatusColor(subscription.status),
                     size: WebResponsive.iconSize(context, factor: 1.0),
                   ),
@@ -57,7 +61,7 @@ class SubscriptionList extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'User: ${subscription.userId}',
+                          'User: ${userEmails[subscription.userId] ?? subscription.userId}',
                           style: WebTextStyles.caption(context),
                         ),
                       ],

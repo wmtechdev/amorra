@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_button.dart';
 import 'package:amorra/core/utils/web/web_responsive/web_responsive.dart';
 import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
@@ -41,7 +42,7 @@ class DetailDialog extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(Iconsax.close_circle),
                     onPressed: () {
                       if (onClose != null) {
                         onClose!();

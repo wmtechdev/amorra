@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:amorra/data/models/subscription_model.dart';
 import 'package:amorra/core/utils/web/web_responsive/web_responsive.dart';
 import 'package:amorra/core/utils/web/web_spacing/web_spacing.dart';
@@ -27,7 +28,7 @@ class SubscriptionActionsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       icon: Icon(
-        Icons.more_vert,
+        Iconsax.more,
         size: WebResponsive.iconSize(context, factor: 0.8),
         color: AppColors.grey,
       ),
@@ -36,7 +37,7 @@ class SubscriptionActionsMenu extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.visibility,
+                Iconsax.eye,
                 size: WebResponsive.iconSize(context, factor: 0.7),
                 color: AppColors.grey,
               ),
@@ -51,7 +52,7 @@ class SubscriptionActionsMenu extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.cancel,
+                  Iconsax.close_circle,
                   size: WebResponsive.iconSize(context, factor: 0.7),
                   color: AppColors.error,
                 ),
@@ -71,7 +72,7 @@ class SubscriptionActionsMenu extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.refresh,
+                  Iconsax.refresh,
                   size: WebResponsive.iconSize(context, factor: 0.7),
                   color: AppColors.success,
                 ),

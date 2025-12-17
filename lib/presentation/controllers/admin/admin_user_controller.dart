@@ -3,18 +3,18 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:amorra/data/models/user_model.dart';
 import 'package:amorra/data/services/admin_service.dart';
-import 'package:amorra/presentation/controllers/base_controller.dart';
+import 'package:amorra/presentation/controllers/admin/admin_base_controller.dart';
 
 /// Admin User Controller
 /// Handles user management operations for admin dashboard
-class AdminUserController extends BaseController {
+class AdminUserController extends AdminBaseController {
   final AdminService _adminService = AdminService();
 
   // State
   final RxList<UserModel> users = <UserModel>[].obs;
-  final Rx<UserModel?> selectedUser = Rx<UserModel?>(null);
   final RxString searchQuery = ''.obs;
-  final RxString selectedFilter = 'all'.obs; // all, blocked, active, subscribed, free
+  final RxString selectedFilter =
+      'all'.obs; // all, blocked, active, subscribed, free
 
   // Filters
   final RxBool filterBlocked = false.obs;
@@ -22,9 +22,7 @@ class AdminUserController extends BaseController {
   final RxBool filterOnboardingCompleted = false.obs;
   final RxBool filterAgeVerified = false.obs;
 
-  // Pagination
-  final RxInt currentPage = 0.obs;
-  final RxInt itemsPerPage = 25.obs;
+  // Total count
   final RxInt totalUsers = 0.obs;
 
   // Analytics
@@ -169,16 +167,6 @@ class AdminUserController extends BaseController {
     }
   }
 
-  /// Select user
-  void selectUser(UserModel user) {
-    selectedUser.value = user;
-  }
-
-  /// Clear selected user
-  void clearSelectedUser() {
-    selectedUser.value = null;
-  }
-
   /// Update user
   Future<bool> updateUser(String userId, Map<String, dynamic> updates) async {
     try {
@@ -230,40 +218,6 @@ class AdminUserController extends BaseController {
     }
   }
 
-  /// Delete user
-  Future<bool> deleteUser(String userId) async {
-    try {
-      setLoading(true);
-      await _adminService.deleteUser(userId);
-      setLoading(false);
-      showSuccess('User deleted successfully');
-      loadUsers(); // Refresh list
-      return true;
-    } catch (e) {
-      setError(e.toString());
-      setLoading(false);
-      showError('Failed to delete user', subtitle: e.toString());
-      return false;
-    }
-  }
-
-  /// Grant free trial
-  Future<bool> grantFreeTrial(String userId, {int days = 7}) async {
-    try {
-      setLoading(true);
-      await _adminService.grantFreeTrial(userId, days: days);
-      setLoading(false);
-      showSuccess('Free trial granted successfully');
-      loadUsers(); // Refresh list
-      return true;
-    } catch (e) {
-      setError(e.toString());
-      setLoading(false);
-      showError('Failed to grant free trial', subtitle: e.toString());
-      return false;
-    }
-  }
-
   /// Load user analytics
   Future<void> loadUserAnalytics() async {
     try {
@@ -282,42 +236,4 @@ class AdminUserController extends BaseController {
     loadUsers();
   }
 
-  /// Clear filters
-  void clearFilters() {
-    filterBlocked.value = false;
-    filterSubscriptionStatus.value = 'all';
-    filterOnboardingCompleted.value = false;
-    filterAgeVerified.value = false;
-    searchQuery.value = '';
-    selectedFilter.value = 'all';
-    loadUsers();
-  }
-
-  /// Get paginated users
-  List<UserModel> get paginatedUsers {
-    final start = currentPage.value * itemsPerPage.value;
-    final end = (start + itemsPerPage.value).clamp(0, users.length);
-    return users.sublist(start.clamp(0, users.length), end);
-  }
-
-  /// Go to next page
-  void nextPage() {
-    if ((currentPage.value + 1) * itemsPerPage.value < users.length) {
-      currentPage.value++;
-    }
-  }
-
-  /// Go to previous page
-  void previousPage() {
-    if (currentPage.value > 0) {
-      currentPage.value--;
-    }
-  }
-
-  /// Set items per page
-  void setItemsPerPage(int items) {
-    itemsPerPage.value = items;
-    currentPage.value = 0; // Reset to first page
-  }
 }
-

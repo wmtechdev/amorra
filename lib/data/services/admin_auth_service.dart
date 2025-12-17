@@ -21,14 +21,33 @@ class AdminAuthService {
       if (user == null) return false;
 
       // Check custom claims first (faster)
-      final idTokenResult = await user.getIdTokenResult();
-      if (idTokenResult.claims?['admin'] == true) {
-        return true;
+      try {
+        final idTokenResult = await user.getIdTokenResult();
+        if (idTokenResult.claims?['admin'] == true) {
+          return true;
+        }
+      } catch (e) {
+        // If getting token fails, user might be signed out
+        if (kDebugMode) {
+          print('Error getting ID token: $e');
+        }
+        return false;
       }
 
       // Fallback: Check Firestore admin collection
-      final adminDoc = await _firestore.collection(adminCollection).doc(user.uid).get();
-      return adminDoc.exists && (adminDoc.data()?['isAdmin'] == true);
+      // Only check if user is still authenticated
+      if (_auth.currentUser == null) return false;
+      
+      try {
+        final adminDoc = await _firestore.collection(adminCollection).doc(user.uid).get();
+        return adminDoc.exists && (adminDoc.data()?['isAdmin'] == true);
+      } catch (e) {
+        // If Firestore check fails (e.g., permission denied), return false
+        if (kDebugMode) {
+          print('Error checking Firestore admin collection: $e');
+        }
+        return false;
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error checking admin status: $e');

@@ -10,6 +10,7 @@ class WebCard extends StatelessWidget {
   final EdgeInsets? padding;
   final EdgeInsets? margin;
   final Color? backgroundColor;
+  final Color? borderColor;
   final VoidCallback? onTap;
   final bool showShadow;
 
@@ -19,6 +20,7 @@ class WebCard extends StatelessWidget {
     this.padding,
     this.margin,
     this.backgroundColor,
+    this.borderColor,
     this.onTap,
     this.showShadow = true,
   });
@@ -34,7 +36,7 @@ class WebCard extends StatelessWidget {
           WebResponsive.radius(context, factor: 1.0),
         ),
         border: Border.all(
-          color: AppColors.lightGrey,
+          color:borderColor ?? AppColors.lightGrey,
           width: 1,
         ),
         boxShadow: showShadow

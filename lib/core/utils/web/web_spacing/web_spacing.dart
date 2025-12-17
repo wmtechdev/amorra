@@ -60,25 +60,25 @@ class WebSpacing {
 
   /// Small spacing (between related items)
   static SizedBox small(BuildContext context) {
-    final spacing = WebResponsive.isDesktop(context) ? 8.0 : 6.0;
+    final spacing = WebResponsive.isDesktop(context) ? 6.0 : 4.0;
     return SizedBox(height: spacing);
   }
 
   /// Medium spacing (between groups)
   static SizedBox medium(BuildContext context) {
-    final spacing = WebResponsive.isDesktop(context) ? 16.0 : 12.0;
+    final spacing = WebResponsive.isDesktop(context) ? 12.0 : 8.0;
     return SizedBox(height: spacing);
   }
 
   /// Large spacing (between major sections)
   static SizedBox large(BuildContext context) {
-    final spacing = WebResponsive.isDesktop(context) ? 32.0 : 24.0;
+    final spacing = WebResponsive.isDesktop(context) ? 28.0 : 20.0;
     return SizedBox(height: spacing);
   }
 
   /// Extra large spacing (between pages/screens)
   static SizedBox extraLarge(BuildContext context) {
-    final spacing = WebResponsive.isDesktop(context) ? 48.0 : 32.0;
+    final spacing = WebResponsive.isDesktop(context) ? 40.0 : 22.0;
     return SizedBox(height: spacing);
   }
 

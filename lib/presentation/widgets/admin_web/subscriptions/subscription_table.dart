@@ -4,6 +4,7 @@ import 'package:amorra/presentation/widgets/admin_web/common/web_data_table.dart
 import 'package:amorra/presentation/widgets/admin_web/common/web_badge.dart';
 import 'package:amorra/presentation/widgets/admin_web/common/web_card.dart';
 import 'package:amorra/presentation/widgets/admin_web/subscriptions/subscription_actions_menu.dart';
+import 'package:amorra/core/utils/web/web_responsive/web_responsive.dart';
 import 'package:amorra/core/utils/web/web_text_styles/web_text_styles.dart';
 import 'package:amorra/core/utils/web/web_texts/web_texts.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
@@ -16,6 +17,7 @@ class SubscriptionTable extends StatelessWidget {
   final Function(SubscriptionModel) onViewDetails;
   final Function(SubscriptionModel) onCancel;
   final Function(SubscriptionModel) onReactivate;
+  final Map<String, String> userEmails;
 
   const SubscriptionTable({
     super.key,
@@ -23,121 +25,138 @@ class SubscriptionTable extends StatelessWidget {
     required this.onViewDetails,
     required this.onCancel,
     required this.onReactivate,
+    required this.userEmails,
   });
+
+  List<DataColumn> _buildColumns(BuildContext context) {
+    return [
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderUser,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderPlan,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderPrice,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderStatus,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderStartDate,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderEndDate,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          WebTexts.tableHeaderActions,
+          style: WebTextStyles.tableHeader(context),
+        ),
+      ),
+    ];
+  }
+
+  List<DataRow> _buildRows(BuildContext context) {
+    return subscriptions.map((subscription) {
+      return DataRow(
+        cells: [
+          DataCell(
+            Text(
+              userEmails[subscription.userId] ?? subscription.userId,
+              style: WebTextStyles.tableCell(context),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          DataCell(
+            Text(
+              subscription.planName ?? WebTexts.subscriptionDetailsNA,
+              style: WebTextStyles.tableCell(context).copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          DataCell(
+            Text(
+              subscription.price != null
+                  ? '\$${subscription.price!.toStringAsFixed(2)}'
+                  : '-',
+              style: WebTextStyles.tableCell(context),
+            ),
+          ),
+          DataCell(
+            WebBadge(
+              text: subscription.status,
+              color: _getStatusColor(subscription.status),
+            ),
+          ),
+          DataCell(
+            Text(
+              subscription.startDate != null
+                  ? _formatDate(subscription.startDate!)
+                  : '-',
+              style: WebTextStyles.tableCell(context),
+            ),
+          ),
+          DataCell(
+            Text(
+              subscription.endDate != null
+                  ? _formatDate(subscription.endDate!)
+                  : '-',
+              style: WebTextStyles.tableCell(context),
+            ),
+          ),
+          DataCell(
+            SubscriptionActionsMenu(
+              subscription: subscription,
+              onViewDetails: () => onViewDetails(subscription),
+              onCancel: () => onCancel(subscription),
+              onReactivate: () => onReactivate(subscription),
+            ),
+          ),
+        ],
+      );
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final columns = _buildColumns(context);
+    final rows = _buildRows(context);
+
     return WebCard(
       padding: EdgeInsets.zero,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: WebDataTable(
-          columns: [
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderUser,
-                style: WebTextStyles.tableHeader(context),
+      child: WebResponsive.isDesktop(context)
+          ? WebDataTable(
+              columns: columns,
+              rows: rows,
+            )
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: WebDataTable(
+                columns: columns,
+                rows: rows,
               ),
             ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderPlan,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderPrice,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderStatus,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderStartDate,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderEndDate,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                WebTexts.tableHeaderActions,
-                style: WebTextStyles.tableHeader(context),
-              ),
-            ),
-          ],
-          rows: subscriptions.map((subscription) {
-            return DataRow(
-              cells: [
-                DataCell(
-                  Text(
-                    subscription.userId,
-                    style: WebTextStyles.tableCell(context),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    subscription.planName ?? WebTexts.subscriptionDetailsNA,
-                    style: WebTextStyles.tableCell(context).copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    subscription.price != null
-                        ? '\$${subscription.price!.toStringAsFixed(2)}'
-                        : '-',
-                    style: WebTextStyles.tableCell(context),
-                  ),
-                ),
-                DataCell(
-                  WebBadge(
-                    text: subscription.status,
-                    color: _getStatusColor(subscription.status),
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    subscription.startDate != null
-                        ? _formatDate(subscription.startDate!)
-                        : '-',
-                    style: WebTextStyles.tableCell(context),
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    subscription.endDate != null
-                        ? _formatDate(subscription.endDate!)
-                        : '-',
-                    style: WebTextStyles.tableCell(context),
-                  ),
-                ),
-                DataCell(
-                  SubscriptionActionsMenu(
-                    subscription: subscription,
-                    onViewDetails: () => onViewDetails(subscription),
-                    onCancel: () => onCancel(subscription),
-                    onReactivate: () => onReactivate(subscription),
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ),
     );
   }
 
