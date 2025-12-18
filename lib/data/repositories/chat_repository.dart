@@ -147,26 +147,87 @@ class ChatRepository {
     }
   }
 
-  /// Delete all messages for a user (if needed)
-  /// Deletes from messages/{userId}/history subcollection (backend path)
+  /// Delete all messages for a user
+  /// Deletes from messages/{userId}/history and messages/{userId}/chats subcollections
+  /// Also deletes the messages/{userId} document itself
   Future<void> deleteAllMessages(String userId) async {
     try {
-      final messagesRef = _firebaseService
-          .collection(AppConstants.collectionMessages)
-          .doc(userId)
-          .collection('history'); // Backend uses 'history' subcollection
-
-      final snapshot = await messagesRef.get();
-      final batch = _firebaseService.firestore.batch();
-
-      for (final doc in snapshot.docs) {
-        batch.delete(doc.reference);
+      if (kDebugMode) {
+        print('🗑️ Deleting all messages for user: $userId');
       }
 
-      await batch.commit();
+      final messagesDocRef = _firebaseService
+          .collection(AppConstants.collectionMessages)
+          .doc(userId);
+
+      // Delete from 'history' subcollection (backend path)
+      try {
+        final historyRef = messagesDocRef.collection('history');
+        final historySnapshot = await historyRef.get();
+        
+        if (historySnapshot.docs.isNotEmpty) {
+          final batch = _firebaseService.firestore.batch();
+          for (final doc in historySnapshot.docs) {
+            batch.delete(doc.reference);
+          }
+          await batch.commit();
+          
+          if (kDebugMode) {
+            print('✅ Deleted ${historySnapshot.docs.length} messages from history subcollection');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting history subcollection: $e');
+        }
+        // Continue with other deletions
+      }
+
+      // Delete from 'chats' subcollection (legacy path)
+      try {
+        final chatsRef = messagesDocRef.collection('chats');
+        final chatsSnapshot = await chatsRef.get();
+        
+        if (chatsSnapshot.docs.isNotEmpty) {
+          final batch = _firebaseService.firestore.batch();
+          for (final doc in chatsSnapshot.docs) {
+            batch.delete(doc.reference);
+          }
+          await batch.commit();
+          
+          if (kDebugMode) {
+            print('✅ Deleted ${chatsSnapshot.docs.length} messages from chats subcollection');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting chats subcollection: $e');
+        }
+        // Continue with document deletion
+      }
+
+      // Delete the messages document itself
+      try {
+        await messagesDocRef.delete();
+        if (kDebugMode) {
+          print('✅ Deleted messages document for user: $userId');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting messages document: $e');
+        }
+        // Non-critical if document doesn't exist
+        if (!e.toString().contains('not found')) {
+          rethrow;
+        }
+      }
+
+      if (kDebugMode) {
+        print('✅ All messages deleted successfully for user: $userId');
+      }
     } catch (e) {
       if (kDebugMode) {
-        print('Delete messages error: $e');
+        print('❌ Delete all messages error: $e');
       }
       rethrow;
     }

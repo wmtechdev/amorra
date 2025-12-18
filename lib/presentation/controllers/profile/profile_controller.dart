@@ -30,7 +30,6 @@ class ProfileController extends BaseController {
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   final RxBool isEditingName = false.obs;
   final RxString editedName = ''.obs;
-  final RxBool showNameUpdateAnimation = false.obs;
   final TextEditingController nameController = TextEditingController();
   final RxBool isLogoutLoading = false.obs;
   final RxBool isDeleteAccountLoading = false.obs;
@@ -38,6 +37,8 @@ class ProfileController extends BaseController {
   // Image upload state
   final RxBool isUploadingImage = false.obs;
   final RxInt currentImageIndex = 0.obs; // 0 = avatar, 1 = profile image
+  // PageController for image swiping
+  PageController? pageController;
   // Reactive remaining messages (synced with SubscriptionController)
   final RxInt remainingFreeMessagesReactive = AppConfig.freeMessageLimit.obs;
 
@@ -68,12 +69,30 @@ class ProfileController extends BaseController {
     _loadUserData();
     _setupUserListener();
     _setupSubscriptionListener();
+    _initializePageController();
   }
 
   @override
   void onClose() {
     nameController.dispose();
+    pageController?.dispose();
     super.onClose();
+  }
+
+  /// Initialize PageController for image swiping
+  void _initializePageController() {
+    pageController?.dispose();
+    pageController = PageController(initialPage: initialImageIndex);
+  }
+
+  /// Update PageController when profile image status changes
+  void _updatePageController() {
+    final newIndex = initialImageIndex;
+    if (pageController?.hasClients == true) {
+      pageController?.jumpToPage(newIndex);
+    } else {
+      _initializePageController();
+    }
   }
 
   /// Setup listener for user changes
@@ -90,11 +109,23 @@ class ProfileController extends BaseController {
 
       ever(authController.currentUser, (UserModel? updatedUser) {
         if (updatedUser != null) {
+          final oldUser = user.value;
           user.value = updatedUser;
           editedName.value = updatedUser.name;
           nameController.text = updatedUser.name;
+          
+          // Only update image index if user actually changed (to avoid overwriting during delete)
+          final oldHasImage = oldUser?.profileImageUrl != null && 
+              oldUser!.profileImageUrl!.isNotEmpty;
+          final newHasImage = updatedUser.profileImageUrl != null && 
+              updatedUser.profileImageUrl!.isNotEmpty;
+          
           // Update image index based on profile image availability
-          currentImageIndex.value = initialImageIndex;
+          // But only if the profile image status actually changed
+          if (oldHasImage != newHasImage) {
+            currentImageIndex.value = initialImageIndex;
+            _updatePageController();
+          }
         } else {
           user.value = null;
           currentImageIndex.value = 0;
@@ -203,6 +234,7 @@ class ProfileController extends BaseController {
         nameController.text = currentUser.name;
         // Set initial image index
         currentImageIndex.value = initialImageIndex;
+        _updatePageController();
       } else {
         // Try to fetch from repository
         final fetchedUser = await _authRepository.getCurrentUser();
@@ -213,6 +245,7 @@ class ProfileController extends BaseController {
           nameController.text = fetchedUser.name;
           // Set initial image index
           currentImageIndex.value = initialImageIndex;
+          _updatePageController();
         }
       }
     } catch (e) {
@@ -274,14 +307,11 @@ class ProfileController extends BaseController {
       isEditingName.value = false;
       editedName.value = newName;
 
-      // Show completion animation
-      showNameUpdateAnimation.value = true;
-
-      // Wait for animation to complete (typically 2-3 seconds)
-      await Future.delayed(const Duration(seconds: 3));
-
-      // Hide animation
-      showNameUpdateAnimation.value = false;
+      // Show success snackbar
+      showSuccess(
+        'Name Updated',
+        subtitle: 'Your name has been updated successfully.',
+      );
     } catch (e) {
       setError(e.toString());
       showError(
@@ -542,6 +572,13 @@ class ProfileController extends BaseController {
     currentImageIndex.value = index;
   }
 
+  /// Handle page change from PageView
+  void onPageChanged(int page) {
+    if (hasProfileImage) {
+      onImageSwipe(page);
+    }
+  }
+
   /// Pick and upload profile image
   Future<void> uploadProfileImage() async {
     if (user.value == null) return;
@@ -581,15 +618,29 @@ class ProfileController extends BaseController {
         updatedAt: DateTime.now(),
       );
 
-      final authController = _authController;
-      if (authController == null) {
-        throw Exception('AuthController not available');
-      }
+      // Update Firestore first
+      await _authRepository.updateUser(updatedUser);
 
-      await authController.updateUser(updatedUser);
-
+      // Update local user value for immediate UI update
+      user.value = updatedUser;
+      
       // Switch to profile image view after upload
       currentImageIndex.value = 1;
+      _updatePageController();
+
+      // Update AuthController's currentUser to keep it in sync
+      final authController = _authController;
+      if (authController != null) {
+        try {
+          authController.currentUser.value = updatedUser;
+        } catch (e) {
+          // Silently handle any errors when updating AuthController
+          // The Firestore update already succeeded, so this is just for sync
+          if (kDebugMode) {
+            print('Note: Could not update AuthController: $e');
+          }
+        }
+      }
 
       showSuccess(
         'Image Uploaded',
@@ -632,24 +683,51 @@ class ProfileController extends BaseController {
     try {
       isUploadingImage.value = true;
 
-      // Delete from Firebase Storage
-      await _storageService.deleteProfileImage(user.value!.id);
+      final currentUser = user.value!;
 
-      // Update user document to remove profile image URL
-      final updatedUser = user.value!.copyWith(
-        profileImageUrl: null,
+      // Delete from Firebase Storage
+      await _storageService.deleteProfileImage(currentUser.id);
+
+      // Delete profileImageUrl field from Firestore explicitly
+      await _authRepository.deleteUserField(currentUser.id, 'profileImageUrl');
+
+      // Create updated user model without profileImageUrl
+      // We need to manually create it since copyWith doesn't handle explicit null properly
+      final updatedUser = UserModel(
+        id: currentUser.id,
+        email: currentUser.email,
+        name: currentUser.name,
+        age: currentUser.age,
+        createdAt: currentUser.createdAt,
         updatedAt: DateTime.now(),
+        isSubscribed: currentUser.isSubscribed,
+        subscriptionStatus: currentUser.subscriptionStatus,
+        isAgeVerified: currentUser.isAgeVerified,
+        isOnboardingCompleted: currentUser.isOnboardingCompleted,
+        isBlocked: currentUser.isBlocked,
+        profileImageUrl: null, // Explicitly set to null
       );
 
-      final authController = _authController;
-      if (authController == null) {
-        throw Exception('AuthController not available');
-      }
-
-      await authController.updateUser(updatedUser);
-
-      // Switch back to avatar view
+      // Update local user value for immediate UI update
+      user.value = updatedUser;
+      
+      // Switch back to avatar view immediately
       currentImageIndex.value = 0;
+      _updatePageController();
+
+      // Update AuthController's currentUser to keep it in sync
+      final authController = _authController;
+      if (authController != null) {
+        try {
+          authController.currentUser.value = updatedUser;
+        } catch (e) {
+          // Silently handle any errors when updating AuthController
+          // The Firestore update already succeeded, so this is just for sync
+          if (kDebugMode) {
+            print('Note: Could not update AuthController: $e');
+          }
+        }
+      }
 
       showSuccess(
         'Image Deleted',

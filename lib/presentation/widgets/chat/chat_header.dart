@@ -1,4 +1,4 @@
-import 'package:amorra/presentation/widgets/common/ai_avatar.dart';
+import 'package:amorra/presentation/widgets/common/app_image_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
 import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
@@ -31,7 +31,7 @@ class ChatHeader extends GetView<ChatController> {
             child: Row(
               children: [
                 // AI Avatar
-                AIAvatar(),
+                AppImageAvatar(isAI: true),
                 AppSpacing.horizontal(context, 0.02),
 
                 // AI Name and Status

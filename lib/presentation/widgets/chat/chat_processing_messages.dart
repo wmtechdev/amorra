@@ -50,44 +50,70 @@ class _ChatProcessingMessagesState extends State<ChatProcessingMessages> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 600),
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        // Smooth fade transition
-        final fadeAnimation = Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOut,
-        ));
+    // Calculate maximum width needed for consistent layout
+    // This ensures all messages take the same space regardless of text length
+    final textStyle = AppTextStyles.hintText(context).copyWith(
+      color: AppColors.grey,
+      fontSize: AppResponsive.scaleSize(context, 12),
+    );
+    
+    // Find the longest message to set consistent width
+    double maxWidth = 0;
+    for (final message in _processingMessages) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: message, style: textStyle),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      if (textPainter.width > maxWidth) {
+        maxWidth = textPainter.width;
+      }
+    }
+    // Add some padding for smooth animation
+    maxWidth += AppResponsive.screenWidth(context) * 0.1;
 
-        // Smooth slide transition (subtle upward movement)
-        final slideAnimation = Tween<Offset>(
-          begin: const Offset(0, 0.15),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        ));
+    return SizedBox(
+      width: maxWidth,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 600),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          // Smooth fade transition
+          final fadeAnimation = Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ));
 
-        // Combine fade and slide for smooth transition
-        return FadeTransition(
-          opacity: fadeAnimation,
-          child: SlideTransition(
-            position: slideAnimation,
-            child: child,
-          ),
-        );
-      },
-      child: Text(
-        _processingMessages[_currentIndex],
-        key: ValueKey<int>(_currentIndex),
-        style: AppTextStyles.hintText(context).copyWith(
-          color: AppColors.grey,
-          fontSize: AppResponsive.scaleSize(context, 12),
+          // Smooth slide transition from left side
+          final slideAnimation = Tween<Offset>(
+            begin: const Offset(-0.3, 0), // Slide in from left
+            end: Offset.zero, // End at left position
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+          ));
+
+          // Combine fade and slide for smooth transition
+          return FadeTransition(
+            opacity: fadeAnimation,
+            child: SlideTransition(
+              position: slideAnimation,
+              child: Align(
+                alignment: Alignment.centerLeft, // Keep text left-aligned
+                child: child,
+              ),
+            ),
+          );
+        },
+        child: Text(
+          _processingMessages[_currentIndex],
+          key: ValueKey<int>(_currentIndex),
+          style: textStyle,
+          textAlign: TextAlign.left, // Ensure left alignment
         ),
       ),
     );

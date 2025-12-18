@@ -37,7 +37,7 @@ class AppConfig {
 
   // AI Configuration
   static const int maxContextMessages = 20; // Number of messages to retain in context
-  static const Duration aiResponseTimeout = Duration(seconds: 30);
+  static const Duration aiResponseTimeout = Duration(seconds: 600); // 10 minutes for AI responses
 
   // Chat Configuration
   static const int maxMessageLength = 1000;

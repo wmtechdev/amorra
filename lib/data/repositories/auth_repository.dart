@@ -1,6 +1,8 @@
 import 'package:amorra/core/constants/app_constants.dart';
 import 'package:amorra/data/models/user_model.dart';
 import 'package:amorra/data/services/firebase_service.dart';
+import 'package:amorra/data/services/storage_service.dart';
+import 'package:amorra/data/repositories/chat_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +36,8 @@ class ReauthenticationRequiredException implements Exception {
 /// Uses UID as document ID for perfect consistency
 class AuthRepository {
   final FirebaseService _firebaseService = FirebaseService();
+  final StorageService _storageService = StorageService();
+  final ChatRepository _chatRepository = ChatRepository();
 
   // Temporary storage for Google credential when signup is required
   AuthCredential? _pendingGoogleCredential;
@@ -456,10 +460,26 @@ class AuthRepository {
   /// Update user document
   Future<void> updateUser(UserModel user) async {
     try {
+      final userJson = user.toJson();
+      final updateData = <String, dynamic>{};
+      
+      // Handle null values - use FieldValue.delete() to remove fields from Firestore
+      for (final entry in userJson.entries) {
+        if (entry.value == null) {
+          // Use FieldValue.delete() to remove the field from Firestore
+          updateData[entry.key] = FieldValue.delete();
+        } else {
+          updateData[entry.key] = entry.value;
+        }
+      }
+      
+      // Remove 'id' from update data as it's the document ID, not a field
+      updateData.remove('id');
+      
       await _firebaseService
           .collection(AppConstants.collectionUsers)
           .doc(user.id)  // Direct access by UID
-          .update(user.toJson());
+          .update(updateData);
 
       if (kDebugMode) {
         print('✅ User document updated: ${user.id}');
@@ -467,6 +487,28 @@ class AuthRepository {
     } catch (e) {
       if (kDebugMode) {
         print('❌ Update user error: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Delete a specific field from user document
+  Future<void> deleteUserField(String userId, String fieldName) async {
+    try {
+      await _firebaseService
+          .collection(AppConstants.collectionUsers)
+          .doc(userId)
+          .update({
+        fieldName: FieldValue.delete(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      if (kDebugMode) {
+        print('✅ Deleted field $fieldName from user: $userId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Delete user field error: $e');
       }
       rethrow;
     }
@@ -999,7 +1041,13 @@ class AuthRepository {
   }
 
   /// Delete user account
-  /// Deletes preferences subcollection, Firestore document, and Firebase Auth account
+  /// Deletes in order:
+  /// 1. User messages from Firestore (history and chats subcollections)
+  /// 2. Profile image from Firebase Storage
+  /// 3. User subscriptions from Firestore
+  /// 4. User preferences subcollection
+  /// 5. Firestore user document
+  /// 6. Firebase Auth account (may require re-authentication)
   Future<void> deleteAccount(String userId, {String? password}) async {
     try {
       if (kDebugMode) {
@@ -1011,7 +1059,58 @@ class AuthRepository {
         throw Exception('User not authenticated or user ID mismatch');
       }
 
-      // Step 1: Delete preferences subcollection (while user is still authenticated)
+      // Step 1: Delete user messages from Firestore (while user is still authenticated)
+      try {
+        await _chatRepository.deleteAllMessages(userId);
+        if (kDebugMode) {
+          print('✅ User messages deleted');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting user messages: $e');
+        }
+        // Continue with other deletions even if messages deletion fails
+      }
+
+      // Step 2: Delete profile image from Firebase Storage (while user is still authenticated)
+      try {
+        await _storageService.deleteProfileImage(userId);
+        if (kDebugMode) {
+          print('✅ Profile image deleted from Storage');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting profile image: $e');
+        }
+        // Continue with other deletions even if profile image deletion fails
+      }
+
+      // Step 3: Delete user subscriptions from Firestore (while user is still authenticated)
+      try {
+        final subscriptionsSnapshot = await _firebaseService
+            .collection(AppConstants.collectionSubscriptions)
+            .where('userId', isEqualTo: userId)
+            .get();
+
+        if (subscriptionsSnapshot.docs.isNotEmpty) {
+          final batch = _firebaseService.firestore.batch();
+          for (final doc in subscriptionsSnapshot.docs) {
+            batch.delete(doc.reference);
+          }
+          await batch.commit();
+          
+          if (kDebugMode) {
+            print('✅ Deleted ${subscriptionsSnapshot.docs.length} subscription(s)');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Error deleting subscriptions: $e');
+        }
+        // Continue with other deletions even if subscriptions deletion fails
+      }
+
+      // Step 4: Delete preferences subcollection (while user is still authenticated)
       try {
         await _firebaseService
             .collection(AppConstants.collectionUsers)
@@ -1030,7 +1129,7 @@ class AuthRepository {
         // Continue with document deletion even if preferences deletion fails
       }
 
-      // Step 2: Delete Firestore user document (while user is still authenticated)
+      // Step 5: Delete Firestore user document (while user is still authenticated)
       try {
         await _firebaseService
             .collection(AppConstants.collectionUsers)
@@ -1038,16 +1137,16 @@ class AuthRepository {
             .delete();
 
         if (kDebugMode) {
-          print('✅ Firestore document deleted');
+          print('✅ Firestore user document deleted');
         }
       } catch (e) {
         if (kDebugMode) {
-          print('⚠️ Error deleting Firestore document: $e');
+          print('⚠️ Error deleting Firestore user document: $e');
         }
         // Continue with Auth deletion even if Firestore fails
       }
 
-      // Step 3: Delete Firebase Auth account (after Firestore operations, may require re-authentication)
+      // Step 6: Delete Firebase Auth account (after Firestore operations, may require re-authentication)
       try {
         // Get fresh user reference
         final userToDelete = _firebaseService.auth.currentUser;
@@ -1120,7 +1219,7 @@ class AuthRepository {
         }
       }
 
-      // Step 3: Sign out from Google if applicable
+      // Step 7: Sign out from Google if applicable
       try {
         final GoogleSignIn googleSignIn = _getGoogleSignIn();
         await googleSignIn.signOut();
