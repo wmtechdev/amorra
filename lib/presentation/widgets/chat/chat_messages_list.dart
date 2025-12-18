@@ -5,7 +5,6 @@ import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/presentation/controllers/chat/chat_controller.dart';
 import 'package:amorra/presentation/widgets/chat/chat_message_bubble.dart';
 import 'package:amorra/presentation/widgets/chat/chat_empty_state.dart';
-import 'package:amorra/presentation/widgets/chat/chat_processing_messages.dart';
 import 'package:amorra/presentation/widgets/common/app_loading_indicator.dart';
 import 'package:amorra/core/constants/app_constants.dart';
 
@@ -83,18 +82,20 @@ class ChatMessagesList extends StatelessWidget {
 
     for (final message in controller.messages) {
       // Add message bubble - always show timestamp
+      // Use Obx to make it reactive to profile image changes
       widgets.add(
         Padding(
           padding: EdgeInsets.only(
             bottom: AppResponsive.screenHeight(context) * 0.015,
           ),
-          child: ChatMessageBubble(
+          child: Obx(() => ChatMessageBubble(
             message: message.message,
             type: message.type,
             timestamp: message.timestamp,
             showTimestamp: true, // Always show timestamp
             userAge: controller.userAge,
-          ),
+            profileImageUrl: controller.profileImageUrl,
+          )),
         ),
       );
     }

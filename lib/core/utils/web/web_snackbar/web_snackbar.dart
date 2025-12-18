@@ -154,6 +154,8 @@ class WebSnackbar extends StatelessWidget {
             : WebResponsive.screenHeight(ctx) * 0.02,
       ),
       padding: EdgeInsets.zero,
+      overlayBlur: 0, // Disable blur effect
+      barBlur: 0, // Disable bar blur
     );
   }
 
@@ -188,6 +190,8 @@ class WebSnackbar extends StatelessWidget {
             : WebResponsive.screenHeight(ctx) * 0.02,
       ),
       padding: EdgeInsets.zero,
+      overlayBlur: 0, // Disable blur effect
+      barBlur: 0, // Disable bar blur
     );
   }
 
@@ -222,6 +226,8 @@ class WebSnackbar extends StatelessWidget {
             : WebResponsive.screenHeight(ctx) * 0.02,
       ),
       padding: EdgeInsets.zero,
+      overlayBlur: 0, // Disable blur effect
+      barBlur: 0, // Disable bar blur
     );
   }
 
@@ -256,6 +262,8 @@ class WebSnackbar extends StatelessWidget {
             : WebResponsive.screenHeight(ctx) * 0.02,
       ),
       padding: EdgeInsets.zero,
+      overlayBlur: 0, // Disable blur effect
+      barBlur: 0, // Disable bar blur
     );
   }
 }

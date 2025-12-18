@@ -8,8 +8,7 @@ import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 import 'package:amorra/core/utils/text_formatter.dart';
 import 'package:amorra/core/constants/app_constants.dart';
 import 'package:amorra/core/utils/app_lotties/app_lotties.dart';
-import 'package:amorra/presentation/widgets/common/ai_avatar.dart';
-import 'package:amorra/presentation/widgets/common/user_avatar.dart';
+import 'package:amorra/presentation/widgets/common/app_image_avatar.dart';
 import 'chat_timestamp_widget.dart';
 
 /// Chat Message Bubble Widget
@@ -21,6 +20,7 @@ class ChatMessageBubble extends StatelessWidget {
   final DateTime timestamp;
   final bool showTimestamp;
   final int? userAge; // For user avatar
+  final String? profileImageUrl; // User profile image URL
   final bool isTyping; // Show typing animation instead of message
 
   const ChatMessageBubble({
@@ -30,6 +30,7 @@ class ChatMessageBubble extends StatelessWidget {
     required this.timestamp,
     this.showTimestamp = true,
     this.userAge,
+    this.profileImageUrl,
     this.isTyping = false,
   });
 
@@ -47,7 +48,7 @@ class ChatMessageBubble extends StatelessWidget {
       children: [
         // Avatar (only for AI, on the left)
         if (!isUser) ...[
-          AIAvatar(size: avatarSize),
+          AppImageAvatar(size: avatarSize, isAI: true),
           AppSpacing.horizontal(context, 0.015),
         ],
 
@@ -158,7 +159,12 @@ class ChatMessageBubble extends StatelessWidget {
         // Avatar (only for user, on the right)
         if (isUser) ...[
           AppSpacing.horizontal(context, 0.015),
-          UserAvatar(age: userAge, size: avatarSize),
+          AppImageAvatar(
+            age: userAge,
+            size: avatarSize,
+            profileImageUrl: profileImageUrl,
+            showProfileImage: profileImageUrl != null && profileImageUrl!.isNotEmpty,
+          ),
         ],
       ],
     );

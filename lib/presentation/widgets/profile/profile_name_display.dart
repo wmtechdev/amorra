@@ -36,18 +36,13 @@ class ProfileNameDisplay extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        AppSpacing.horizontal(context, 0.02),
         AppIconButton(
           icon: Iconsax.edit_2,
           onTap: onEditTap,
-          backgroundColor: AppColors.white.withValues(alpha: 0.2),
+          backgroundColor: Colors.transparent,
           iconColor: AppColors.white,
-          size: AppResponsive.iconSize(context, factor: 1.2),
-          padding: EdgeInsets.all(AppResponsive.screenWidth(context) * 0.02),
-          boxShadow: [], // No shadow for edit button
         ),
       ],
     );
   }
 }
-

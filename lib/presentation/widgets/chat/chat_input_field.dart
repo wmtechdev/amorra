@@ -51,14 +51,17 @@ class _ChatInputFieldState extends State<ChatInputField> {
   @override
   Widget build(BuildContext context) {
     final hasText = widget.controller.text.trim().isNotEmpty;
-    final canSend = hasText && !widget.isLimitReached && !widget.isReplying && widget.onSend != null;
+    final canSend =
+        hasText &&
+        !widget.isLimitReached &&
+        !widget.isReplying &&
+        widget.onSend != null;
 
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.lightGrey,
-          ),
+          bottom: BorderSide(color: AppColors.lightGrey),
+          top: BorderSide(color: AppColors.lightGrey),
         ),
       ),
       padding: AppSpacing.symmetric(context, h: 0.04, v: 0).copyWith(left: 0),
@@ -70,8 +73,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
             Expanded(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: AppResponsive.screenHeight(context) * 0.2, // Max 20% of screen height
-                  minHeight: AppResponsive.screenHeight(context) * 0.05, // Min height for single line
+                  maxHeight: AppResponsive.screenHeight(context) * 0.2,
+                  // Max 20% of screen height
+                  minHeight:
+                      AppResponsive.screenHeight(context) *
+                      0.05, // Min height for single line
                 ),
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -80,9 +86,12 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     focusNode: widget.focusNode,
                     maxLines: null,
                     minLines: 1,
-                    textCapitalization: TextCapitalization.sentences, // Capitalize first letter of sentences
-                    textInputAction: TextInputAction.newline, // Allow newline from keyboard
-                    keyboardType: TextInputType.multiline, // Enable multi-line keyboard
+                    textCapitalization: TextCapitalization.sentences,
+                    // Capitalize first letter of sentences
+                    textInputAction: TextInputAction.newline,
+                    // Allow newline from keyboard
+                    keyboardType: TextInputType.multiline,
+                    // Enable multi-line keyboard
                     style: AppTextStyles.bodyText(
                       context,
                     ).copyWith(color: AppColors.black),

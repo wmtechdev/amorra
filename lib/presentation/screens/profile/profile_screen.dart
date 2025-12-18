@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:amorra/core/utils/app_colors/app_colors.dart';
-import 'package:amorra/core/utils/app_lotties/app_lotties.dart';
 import 'package:amorra/core/utils/app_responsive/app_responsive.dart';
 import 'package:amorra/core/utils/app_spacing/app_spacing.dart';
 import 'package:amorra/core/utils/app_styles/app_text_styles.dart';
 import 'package:amorra/core/utils/app_texts/app_texts.dart';
 import 'package:amorra/presentation/widgets/common/app_screen_header.dart';
-import 'package:amorra/presentation/widgets/common/app_lottie_message.dart';
 import 'package:amorra/presentation/widgets/common/app_loading_indicator.dart';
 import 'package:amorra/presentation/widgets/profile/profile_header_card.dart';
 import 'package:amorra/presentation/widgets/profile/profile_user_info_card.dart';
@@ -73,20 +71,7 @@ class ProfileScreen extends GetView<ProfileController> {
                         AppSpacing.vertical(context, 0.01),
 
                         // Profile Header Card with Gradient
-                        Obx(() => ProfileHeaderCard(
-                              userName: controller.userName,
-                              userAge: controller.userAge,
-                              profileImageUrl: controller.profileImageUrl,
-                              isEditingName: controller.isEditingName.value,
-                              isUploadingImage: controller.isUploadingImage.value,
-                              currentImageIndex: controller.currentImageIndex.value,
-                              nameController: controller.nameController,
-                              onEditTap: controller.startEditingName,
-                              onSave: controller.saveName,
-                              onCancel: controller.cancelEditingName,
-                              onUploadImage: controller.uploadProfileImage,
-                              onImageSwipe: controller.onImageSwipe,
-                            )),
+                        const ProfileHeaderCard(),
                         AppSpacing.vertical(context, 0.02),
 
                         // User Information Card
@@ -124,15 +109,6 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
               ],
-            ),
-            // Name Update Animation Overlay
-            Obx(
-              () => controller.showNameUpdateAnimation.value
-                  ? AppLottieMessage(
-                      lottiePath: AppLotties.completed,
-                      message: AppTexts.profileNameUpdatedMessage,
-                    )
-                  : const SizedBox.shrink(),
             ),
           ],
         );

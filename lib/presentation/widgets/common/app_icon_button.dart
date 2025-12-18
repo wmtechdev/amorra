@@ -32,19 +32,12 @@ class AppIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonSize = size ?? AppResponsive.iconSize(context, factor: 1.5);
-    final finalIconSize = iconSize ?? AppResponsive.iconSize(context, factor: 0.8);
+    final finalIconSize =
+        iconSize ?? AppResponsive.iconSize(context, factor: 0.8);
     final finalBackgroundColor = backgroundColor ?? AppColors.white;
     final finalIconColor = iconColor ?? AppColors.primary;
-    final finalPadding = padding ?? EdgeInsets.all(AppResponsive.screenWidth(context) * 0.02);
-    
-    final defaultShadow = [
-      BoxShadow(
-        color: AppColors.black.withValues(alpha: 0.2),
-        blurRadius: 4,
-        offset: const Offset(0, 2),
-      ),
-    ];
-    final finalBoxShadow = boxShadow ?? defaultShadow;
+    final finalPadding =
+        padding ?? EdgeInsets.all(AppResponsive.screenWidth(context) * 0.02);
 
     return GestureDetector(
       onTap: isLoading ? null : onTap,
@@ -55,7 +48,6 @@ class AppIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: finalBackgroundColor,
-          boxShadow: finalBoxShadow,
         ),
         child: isLoading
             ? Center(
@@ -64,13 +56,8 @@ class AppIconButton extends StatelessWidget {
                   color: finalIconColor,
                 ),
               )
-            : Icon(
-                icon,
-                color: finalIconColor,
-                size: finalIconSize,
-              ),
+            : Icon(icon, color: finalIconColor, size: finalIconSize),
       ),
     );
   }
 }
-
